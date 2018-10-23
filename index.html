@@ -31,8 +31,8 @@
 		let ballRadius = 10;
 		let x = canvas.width / 2;
 		let y = canvas.height - 30;
-		let dx = 1;
-		let dy = -1;
+		let dx = 3;
+		let dy = -3;
 
 		// Paddle Variables
 		let paddleHeight = 10;
@@ -60,6 +60,7 @@
 
 		// Defining UI Variables
 		let score = 0;
+		let lives = 3;
 		let game_on = true;
 
 		document.addEventListener("keydown", keyDownHandler, false);
@@ -149,6 +150,10 @@
 			ctx.font = "16px Arial";
 			ctx.fillText("Score: " + score, 8, 20);
 		}
+		function drawLives() {
+			ctx.font = "16px Arial";
+			ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
+		}
 
 		function getRandomColor() {
 			let letters = '0123456789ABCDEF';
@@ -165,25 +170,12 @@
 			drawPaddle();
 			drawBricks();
 			drawScore();
+			drawLives();
 			collisionDetection();
 
 			if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
 				dx = -dx;
 			}
-
-			// if (y + dy < ballRadius) {
-			// 	dy = -dy;
-			// } else if (y + dy > canvas.height - ballRadius) {
-			// 	if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
-			// 		dy = -dy;
-			// 	}
-			// 	else {
-			// 		alert("GAME OVER");
-			// 		document.location.reload();
-			// 	}
-			// }
-
-
 			if (y + dy < ballRadius) {
 				// If ball would touch the ceiling
 				dy = -dy;
@@ -195,10 +187,20 @@
 				}
 			} else if (y + dy > canvas.height - ballRadius) {
 				// If ball would touch the floor
-				if (game_on) {
-					game_on = false
-					alert("GAME OVER");
-					document.location.reload();
+				lives--;
+				if (!lives) {
+					if (game_on) {
+						game_on = false
+						alert("GAME OVER");
+						document.location.reload();
+					}
+				}
+				else {
+					x = canvas.width / 2;
+					y = canvas.height - 30;
+					dy = -Math.abs(dy);
+
+					paddleX = (canvas.width - paddleWidth) / 2;
 				}
 			}
 
@@ -211,10 +213,11 @@
 
 			x += dx;
 			y += dy;
+
+			requestAnimationFrame(draw);
 		}
 
-		setInterval(draw, 1);
-
+		draw();
 	</script>
 </body>
 
