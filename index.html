@@ -92,7 +92,7 @@
 			if (y + dy < ballRadius) {
 				dy = -dy;
 				ctx.fillStyle = getRandomColor();
-			} else if (y + dy > canvas.height - ballRadius - paddleHeight) {
+			} else if (y + dy > canvas.height - ballRadius) {
 				if (x > paddleX && x < paddleX + paddleWidth) {
 					dy = -dy;
 					ctx.fillStyle = getRandomColor();
