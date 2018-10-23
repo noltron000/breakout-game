@@ -48,6 +48,7 @@ const keyDownHandler = (e) => {
 		leftPressed = true;
 	}
 }
+
 const keyUpHandler = (e) => {
 	if (e.keyCode == 39) {
 		rightPressed = false;
@@ -56,17 +57,17 @@ const keyUpHandler = (e) => {
 		leftPressed = false;
 	}
 }
+
 const mouseMoveHandler = (e) => {
 	let relativeX = e.clientX - canvas.offsetLeft;
 	if (relativeX > 0 && relativeX < canvas.width) {
 		paddleX = relativeX - paddleWidth / 2;
 	}
 }
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
-
-
 
 const collisionDetection = () => {
 	for (let c = 0; c < brickColumnCount; c++) {
@@ -193,10 +194,8 @@ const draw = () => {
 	else if (leftPressed && paddleX > 0) {
 		paddleX -= 7;
 	}
-
 	x += dx;
 	y += dy;
-
 	requestAnimationFrame(draw);
 }
 
