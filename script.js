@@ -38,12 +38,9 @@ let score = 0;
 let lives = 3;
 let game_on = true;
 
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-document.addEventListener("mousemove", mouseMoveHandler, false);
+// Adding Event Handlers
 
-
-function keyDownHandler(e) {
+const keyDownHandler = (e) => {
 	if (e.keyCode == 39) {
 		rightPressed = true;
 	}
@@ -51,7 +48,7 @@ function keyDownHandler(e) {
 		leftPressed = true;
 	}
 }
-function keyUpHandler(e) {
+const keyUpHandler = (e) => {
 	if (e.keyCode == 39) {
 		rightPressed = false;
 	}
@@ -59,15 +56,19 @@ function keyUpHandler(e) {
 		leftPressed = false;
 	}
 }
-
-function mouseMoveHandler(e) {
+const mouseMoveHandler = (e) => {
 	let relativeX = e.clientX - canvas.offsetLeft;
 	if (relativeX > 0 && relativeX < canvas.width) {
 		paddleX = relativeX - paddleWidth / 2;
 	}
 }
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
-function collisionDetection() {
+
+
+const collisionDetection = () => {
 	for (let c = 0; c < brickColumnCount; c++) {
 		for (let r = 0; r < brickRowCount; r++) {
 			let b = bricks[c][r];
@@ -98,21 +99,21 @@ function collisionDetection() {
 }
 
 
-function drawBall() {
+const drawBall = () => {
 	ctx.beginPath();
 	ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
 	ctx.fill();
 	ctx.closePath();
 }
 
-function drawPaddle() {
+const drawPaddle = () => {
 	ctx.beginPath();
 	ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
 	ctx.fill();
 	ctx.closePath();
 }
 
-function drawBricks() {
+const drawBricks = () => {
 	for (let c = 0; c < brickColumnCount; c++) {
 		for (let r = 0; r < brickRowCount; r++) {
 			if (bricks[c][r].status == true) {
@@ -129,16 +130,16 @@ function drawBricks() {
 	}
 }
 
-function drawScore() {
+const drawScore = () => {
 	ctx.font = "16px Arial";
 	ctx.fillText("Score: " + score, 8, 20);
 }
-function drawLives() {
+const drawLives = () => {
 	ctx.font = "16px Arial";
 	ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
 }
 
-function getRandomColor() {
+const getRandomColor = () => {
 	let letters = '0123456789ABCDEF';
 	let color = '#';
 	for (let i = 0; i < 6; i++) {
@@ -147,7 +148,7 @@ function getRandomColor() {
 	return color;
 }
 
-function draw() {
+const draw = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawBall();
 	drawPaddle();
