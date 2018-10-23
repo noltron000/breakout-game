@@ -84,21 +84,23 @@
 		}
 
 		function mouseMoveHandler(e) {
-			var relativeX = e.clientX - canvas.offsetLeft;
+			let relativeX = e.clientX - canvas.offsetLeft;
 			if (relativeX > 0 && relativeX < canvas.width) {
 				paddleX = relativeX - paddleWidth / 2;
 			}
 		}
 
 		function collisionDetection() {
-			for (var c = 0; c < brickColumnCount; c++) {
-				for (var r = 0; r < brickRowCount; r++) {
-					var b = bricks[c][r];
+			for (let c = 0; c < brickColumnCount; c++) {
+				for (let r = 0; r < brickRowCount; r++) {
+					let b = bricks[c][r];
 					if (b.status == 1) {
-						if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
+						if (x + ballRadius > b.x && x - ballRadius < b.x + brickWidth && y + ballRadius > b.y && y - ballRadius < b.y + brickHeight) {
 							dy = -dy;
 							b.status = 0;
 							score++;
+							dy = dy * 25 / 24;
+							dx = dx * 25 / 24;
 							ctx.fillStyle = getRandomColor();
 							if (score == brickRowCount * brickColumnCount) {
 								alert("YOU WIN, CONGRATULATIONS!");
@@ -129,8 +131,8 @@
 			for (let c = 0; c < brickColumnCount; c++) {
 				for (let r = 0; r < brickRowCount; r++) {
 					if (bricks[c][r].status == 1) {
-						var brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-						var brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+						let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+						let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
 						bricks[c][r].x = brickX;
 						bricks[c][r].y = brickY;
 						ctx.beginPath();
@@ -168,19 +170,33 @@
 				dx = -dx;
 			}
 
+			// if (y + dy < ballRadius) {
+			// 	dy = -dy;
+			// } else if (y + dy > canvas.height - ballRadius) {
+			// 	if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
+			// 		dy = -dy;
+			// 	}
+			// 	else {
+			// 		alert("GAME OVER");
+			// 		document.location.reload();
+			// 	}
+			// }
+
+
 			if (y + dy < ballRadius) {
+				// If ball would touch the ceiling
 				dy = -dy;
-			} else if (y + dy > canvas.height - ballRadius) {
-				if (x > paddleX && x < paddleX + paddleWidth) {
+			} else if ((y + dy > canvas.height - ballRadius - paddleHeight - paddleRaise) && (y + dy < canvas.height - ballRadius - paddleRaise)) {
+				// If ball would touch the paddle on floor
+				if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
+					// If ball is in horizontal range of the paddle
 					dy = -dy;
 				}
-				else {
-					alert("GAME OVER");
-					document.location.reload();
-				}
+			} else if (y + dy > canvas.height - ballRadius) {
+				// If ball would touch the floor
+				alert("GAME OVER");
+				document.location.reload();
 			}
-
-
 
 			if (rightPressed && paddleX < canvas.width - paddleWidth) {
 				paddleX += 7;
