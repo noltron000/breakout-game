@@ -37,6 +37,7 @@
 		// Paddle Variables
 		let paddleHeight = 10;
 		let paddleWidth = 75;
+		let paddleRaise = paddleHeight;
 		let paddleX = (canvas.width - paddleWidth) / 2;
 		let rightPressed = false;
 		let leftPressed = false;
@@ -62,6 +63,8 @@
 
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
+		document.addEventListener("mousemove", mouseMoveHandler, false);
+
 
 		function keyDownHandler(e) {
 			if (e.keyCode == 39) {
@@ -77,6 +80,13 @@
 			}
 			else if (e.keyCode == 37) {
 				leftPressed = false;
+			}
+		}
+
+		function mouseMoveHandler(e) {
+			var relativeX = e.clientX - canvas.offsetLeft;
+			if (relativeX > 0 && relativeX < canvas.width) {
+				paddleX = relativeX - paddleWidth / 2;
 			}
 		}
 
@@ -110,7 +120,7 @@
 
 		function drawPaddle() {
 			ctx.beginPath();
-			ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+			ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
 			ctx.fill();
 			ctx.closePath();
 		}
