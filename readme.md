@@ -2,7 +2,7 @@
 > ##### Created using this tutorial:
 > https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
 
-This simple game will entertain as you move your paddle — pinging your pong with reckless abandon and colorful delight! Wow! 
+This simple game will entertain as you move your paddle — pinging and ponging with reckless abandon and colorful delight! Wow, amazing! 
 
 ## Instructions
 Use your Left and Right arrow keys to control the paddle.  
