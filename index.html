@@ -31,8 +31,8 @@
 		let ballRadius = 10;
 		let x = canvas.width / 2;
 		let y = canvas.height - 30;
-		let dx = 2;
-		let dy = -2;
+		let dx = 1;
+		let dy = -1;
 
 		// Paddle Variables
 		let paddleHeight = 10;
@@ -54,12 +54,13 @@
 		for (let c = 0; c < brickColumnCount; c++) {
 			bricks[c] = [];
 			for (let r = 0; r < brickRowCount; r++) {
-				bricks[c][r] = { x: 0, y: 0, status: 1 };
+				bricks[c][r] = { x: 0, y: 0, status: true };
 			}
 		}
 
 		// Defining UI Variables
 		let score = 0;
+		let game_on = true;
 
 		document.addEventListener("keydown", keyDownHandler, false);
 		document.addEventListener("keyup", keyUpHandler, false);
@@ -94,10 +95,10 @@
 			for (let c = 0; c < brickColumnCount; c++) {
 				for (let r = 0; r < brickRowCount; r++) {
 					let b = bricks[c][r];
-					if (b.status == 1) {
+					if (b.status == true) {
 						if (x + ballRadius > b.x && x - ballRadius < b.x + brickWidth && y + ballRadius > b.y && y - ballRadius < b.y + brickHeight) {
 							dy = -dy;
-							b.status = 0;
+							b.status = false;
 							score++;
 							dy = dy * 25 / 24;
 							dx = dx * 25 / 24;
@@ -130,7 +131,7 @@
 		function drawBricks() {
 			for (let c = 0; c < brickColumnCount; c++) {
 				for (let r = 0; r < brickRowCount; r++) {
-					if (bricks[c][r].status == 1) {
+					if (bricks[c][r].status == true) {
 						let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
 						let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
 						bricks[c][r].x = brickX;
@@ -190,12 +191,15 @@
 				// If ball would touch the paddle on floor
 				if (x + ballRadius > paddleX && x - ballRadius < paddleX + paddleWidth) {
 					// If ball is in horizontal range of the paddle
-					dy = -dy;
+					dy = -Math.abs(dy);
 				}
 			} else if (y + dy > canvas.height - ballRadius) {
 				// If ball would touch the floor
-				alert("GAME OVER");
-				document.location.reload();
+				if (game_on) {
+					game_on = false
+					alert("GAME OVER");
+					document.location.reload();
+				}
 			}
 
 			if (rightPressed && paddleX < canvas.width - paddleWidth) {
@@ -209,7 +213,7 @@
 			y += dy;
 		}
 
-		setInterval(draw, 10);
+		setInterval(draw, 1);
 
 	</script>
 </body>
