@@ -73,7 +73,15 @@ function collisionDetection() {
 			let b = bricks[c][r];
 			if (b.status == true) {
 				if (x + ballRadius > b.x && x - ballRadius < b.x + brickWidth && y + ballRadius > b.y && y - ballRadius < b.y + brickHeight) {
-					dy = -dy;
+					// If ball is within range of Brick
+					if (x > b.x && x < b.x + brickWidth) {
+						// If ball is specifically within horizontal range of block
+						dy = -dy;
+					} else if (y > b.y && y < b.y + brickWidth) {
+						// If ball is specifically within verticle range of block
+						dx = -dx;
+					}
+					// Continue on with function
 					b.status = false;
 					score++;
 					dy = dy * 25 / 24;
@@ -174,7 +182,6 @@ function draw() {
 			x = canvas.width / 2;
 			y = canvas.height - 30;
 			dy = -Math.abs(dy);
-
 			paddleX = (canvas.width - paddleWidth) / 2;
 		}
 	}
