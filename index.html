@@ -60,7 +60,6 @@
 		function drawBall() {
 			ctx.beginPath();
 			ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-			ctx.fillStyle = "#0095DD";
 			ctx.fill();
 			ctx.closePath();
 		}
@@ -90,10 +89,21 @@
 				ctx.fillStyle = getRandomColor();
 			}
 
-			if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+			if (y + dy < ballRadius) {
 				dy = -dy;
-				ctx.fillStyle = getRandomColor()
+				ctx.fillStyle = getRandomColor();
+			} else if (y + dy > canvas.height - ballRadius - paddleHeight) {
+				if (x > paddleX && x < paddleX + paddleWidth) {
+					dy = -dy;
+					ctx.fillStyle = getRandomColor();
+				}
+				else {
+					alert("GAME OVER");
+					document.location.reload();
+				}
 			}
+
+
 
 			if (rightPressed && paddleX < canvas.width - paddleWidth) {
 				paddleX += 7;
