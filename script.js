@@ -39,7 +39,6 @@ let lives = 3;
 let game_on = true;
 
 // Adding Event Handlers
-
 const keyDownHandler = (e) => {
 	if (e.keyCode == 39) {
 		rightPressed = true;
@@ -83,7 +82,7 @@ const collisionDetection = () => {
 						// If ball is specifically within verticle range of block
 						dx = -dx;
 					}
-					// Continue on with function
+					// Regardless, Continue on with function
 					b.status = false;
 					score++;
 					dy = dy * 25 / 24;
@@ -98,7 +97,6 @@ const collisionDetection = () => {
 		}
 	}
 }
-
 
 const drawBall = () => {
 	ctx.beginPath();
