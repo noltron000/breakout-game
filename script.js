@@ -18,13 +18,13 @@ let rightPressed = false;
 let leftPressed = false;
 
 // Brick Variables
-let brickRowCount = 3;
-let brickColumnCount = 5;
-let brickWidth = 75;
-let brickHeight = 20;
-let brickPadding = 10;
+let brickRowCount = 8;
+let brickColumnCount = 12;
+let brickPadding = 2;
 let brickOffsetTop = 30;
 let brickOffsetLeft = 30;
+let brickWidth = (canvas.width - brickOffsetLeft * 2) / brickColumnCount;
+let brickHeight = (canvas.height - brickOffsetTop) / (brickRowCount * 4);
 let bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
 	bricks[c] = [];
@@ -37,6 +37,11 @@ for (let c = 0; c < brickColumnCount; c++) {
 let score = 0;
 let lives = 3;
 let game_on = true;
+
+// Defining COLOR Variables
+let ballColor = 200;
+let brickColor = "";
+let paddleColor = "";
 
 // Adding Event Handlers
 const keyDownHandler = (e) => {
@@ -68,6 +73,23 @@ document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener("mousemove", mouseMoveHandler, false);
 
+
+const getRandomColor = () => {
+	ctx.fillStyle = 'gray'
+	let letters = '0123456789ABCDEF';
+	let color = '#';
+	for (let i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+}
+
+const rainbowMode = (color) => {
+	console.log(color)
+	return `hsl(${color}, 100%, 50%)`
+
+}
+
 const collisionDetection = () => {
 	for (let c = 0; c < brickColumnCount; c++) {
 		for (let r = 0; r < brickRowCount; r++) {
@@ -87,7 +109,6 @@ const collisionDetection = () => {
 					score++;
 					dy = dy * 25 / 24;
 					dx = dx * 25 / 24;
-					ctx.fillStyle = getRandomColor();
 					if (score == brickRowCount * brickColumnCount) {
 						alert("YOU WIN, CONGRATULATIONS!");
 						document.location.reload();
@@ -99,6 +120,8 @@ const collisionDetection = () => {
 }
 
 const drawBall = () => {
+	ctx.fillStyle = rainbowMode(ballColor);
+	ballColor += 1
 	ctx.beginPath();
 	ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
 	ctx.fill();
@@ -106,6 +129,7 @@ const drawBall = () => {
 }
 
 const drawPaddle = () => {
+	ctx.fillStyle = 'gray'
 	ctx.beginPath();
 	ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
 	ctx.fill();
@@ -113,11 +137,21 @@ const drawPaddle = () => {
 }
 
 const drawBricks = () => {
+	ctx.fillStyle = 'gray'
 	for (let c = 0; c < brickColumnCount; c++) {
 		for (let r = 0; r < brickRowCount; r++) {
 			if (bricks[c][r].status == true) {
-				let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-				let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+				let brickX = (c * (brickWidth + brickPadding * 2)) + brickOffsetLeft;
+				let brickY = (r * (brickHeight + brickPadding * 2)) + brickOffsetTop;
+				bricks[c][r].x = brickX;
+				bricks[c][r].y = brickY;
+				if ((r % 2) == 0) {
+					brickX = (c * (brickWidth + brickPadding)) + brickWidth / 2 + brickOffsetLeft;
+					brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+				} else {
+					brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+					brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+				}
 				bricks[c][r].x = brickX;
 				bricks[c][r].y = brickY;
 				ctx.beginPath();
@@ -130,21 +164,15 @@ const drawBricks = () => {
 }
 
 const drawScore = () => {
+	ctx.fillStyle = 'gray'
 	ctx.font = "16px Arial";
 	ctx.fillText("Score: " + score, 8, 20);
 }
+
 const drawLives = () => {
+	ctx.fillStyle = 'gray'
 	ctx.font = "16px Arial";
 	ctx.fillText("Lives: " + lives, canvas.width - 65, 20);
-}
-
-const getRandomColor = () => {
-	let letters = '0123456789ABCDEF';
-	let color = '#';
-	for (let i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
-	}
-	return color;
 }
 
 const draw = () => {
