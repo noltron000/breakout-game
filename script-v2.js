@@ -2,18 +2,15 @@ canvas = document.getElementById("myCanvas");
 ctx = canvas.getContext("2d"); // CANVAS CONTEXT
 
 class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
-	constructor(x = 0, y = 0, xDelta = 0, yDelta = 0, length = 0, height = 0, radius = 0, colour = 'grey') {
+	constructor(x = 0, y = 0, xDelta = 0, yDelta = 0, colour = 'grey') {
 		this.x = x;
 		this.y = y;
 		this.xDelta = xDelta;
 		this.yDelta = yDelta;
-		this.length = length;
-		this.height = height;
-		this.radius = radius;
 		this.colour = colour;
 	}
 
-	drawBox() { // DRAW BOX FUNCTION //
+	drawSquare() { // DRAW BOX FUNCTION //
 		ctx.fillStyle = this.colour
 		ctx.beginPath();
 		ctx.rect(this.x, this.y, this.length, this.height);
@@ -32,17 +29,19 @@ class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 
 class Ball extends Node { // CREATES GAME BALL WITH PHYSICS //
 	constructor(x, y, xDelta, yDelta, radius, colour) {
-		super(x, y, xDelta, yDelta, radius, colour);
+		super(x, y, xDelta, yDelta, colour);
+		this.radius = radius;
 	}
 }
 
 class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 	constructor(x, y, xDelta, yDelta, length, height, colour, pressL, pressR) {
-		super(x, y, xDelta, yDelta, length, height, colour);
+		super(x, y, xDelta, yDelta, colour);
+		this.length = length;
+		this.height = height;
 		this.pressL = pressL;
 		this.pressR = pressR;
 	}
-
 	keyDownHandler(event) { // Setting up keypress event listener
 		if (event.keyCode == 39) {
 			pressR = true;
@@ -60,11 +59,21 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 			pressL = false;
 		}
 	}
+
+	mouseMoveHandler(event) { // Allows for mouse movements in game
+		// Needs Refactored — has some ugly code
+		let xRel = event.clientX - canvas.offsetLeft;
+		if (xRel > 0 && xRel < canvas.width) {
+			paddleX = xRel - paddleWidth / 2;
+		}
+	}
 }
 
 class Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
 	constructor(x, y, length, height, colour, health) {
-		super(x, y, length, height, colour);
+		super(x, y, xDelta, yDelta, colour);
+		this.length = length;
+		this.height = height;
 		this.health = health;
 	}
 }
@@ -85,15 +94,17 @@ HUD CLASS
 GAME CLASS
 */
 class Game { // GAME CLASS //
-	constructor(canvasLength, canvasHeight) {
-		this.ball = new Ball()
+	constructor() {
+		this.ball = new Ball(50, 50, 0, 0, 50, 'blue')
 		this.paddle = new Paddle()
-		this.brickArray = new BrickArray()
-		this.hud = new HUD()
+		// this.brickArray = new BrickArray()
+		// this.hud = new HUD()
+	}
+
+	start() { // ADDS THE ILLUSION OF MOTION OVER TIME //
+
 	}
 }
 
-/*
-CANVAS CLASS
-*/
-
+const game = new Game()
+game.start()
