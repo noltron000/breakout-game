@@ -7,7 +7,6 @@ let MarginTop = 80;
 let MarginSide = 80;
 
 // Ball Variables
-
 let ballRadius = 128;
 let x = (canvas.width - MarginSide * 2 - ballRadius * 2) * Math.random() + MarginSide + ballRadius;
 let y = (canvas.height / 3) * Math.random() + canvas.height / 2;
