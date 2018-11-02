@@ -1,17 +1,18 @@
 // JavaScript code goes here
 let canvas = document.getElementById("myCanvas");
-let ctx = canvas.getContext("2d");
+let ctx = canvas.getContext("2d"); // CANVAS CONTEXT
 
-// Canvas Variables
+// Canvas Variables™€
 let MarginTop = 80;
 let MarginSide = 80;
 
 // Ball Variables
+
 let ballRadius = 128;
 let x = (canvas.width - MarginSide * 2 - ballRadius * 2) * Math.random() + MarginSide + ballRadius;
 let y = (canvas.height / 3) * Math.random() + canvas.height / 2;
-let dx = 4;
-let dy = -4;
+let dx = 0.125;
+let dy = -0.125;
 let max_dx = 24;
 let max_dy = 24;
 
@@ -25,13 +26,11 @@ let rightPressed = false;
 let leftPressed = false;
 
 // Brick Variables
-let brickRowCount = 16;
-let brickColCount = 32;
-let brickPadding = 0;
+let brickRowCount = 4;
+let brickColCount = 4;
+let brickPadding = 3;
 let brickHeight = (canvas.height / 2 - MarginTop) / (brickRowCount);
 let brickWidth = (canvas.width - MarginSide * 2 - (brickPadding * (brickRowCount - 1) / brickColCount)) / brickColCount;
-
-
 
 let bricks = [];
 for (let c = 0; c < brickColCount; c++) {
