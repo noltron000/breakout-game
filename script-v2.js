@@ -10,18 +10,18 @@ class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 		this.colour = colour;
 	}
 
-	drawSquare() { // DRAW BOX FUNCTION //
+	draw() { // CATCH-ALL DRAW FUNCTION //
 		ctx.fillStyle = this.colour
 		ctx.beginPath();
-		ctx.rect(this.x, this.y, this.length, this.height);
-		ctx.fill();
-		ctx.closePath();
-	}
-
-	drawCircle() { // DRAW CIRCLE FUNCTION //
-		ctx.fillStyle = this.colour
-		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+		if (this.radius != undefined) { // This object has a radius. It is a circle.
+			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+		}
+		else if ((this.length != undefined) && (this.height != undefined)) { // This object has a length and width. It is a square.
+			ctx.rect(this.x, this.y, this.length, this.height);
+		}
+		else {
+			console.log("This object is neither circle nor square?")
+		}
 		ctx.fill();
 		ctx.closePath();
 	}
@@ -96,7 +96,7 @@ GAME CLASS
 class Game { // GAME CLASS //
 	constructor() {
 		this.ball = new Ball(50, 50, 0, 0, 50, 'blue')
-		this.paddle = new Paddle()
+		this.paddle = new Paddle(70, 70, 0, 0, 50, 75, 'red')
 		// this.brickArray = new BrickArray()
 		// this.hud = new HUD()
 	}
@@ -108,3 +108,6 @@ class Game { // GAME CLASS //
 
 const game = new Game()
 game.start()
+
+game.ball.draw()
+game.paddle.draw()
