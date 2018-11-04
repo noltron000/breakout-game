@@ -29,12 +29,20 @@ class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 	move() { // CATCH-ALL MOVE FUNCTION //
 		console.log(canvas.width)
 		console.log(this.length)
-		if (this.pressR == true) { // && this.x + this.width < canvas.width
+		if (this.pressR == true) {
 			this.x += 7;
 		}
-		else if (this.pressL == true && this.x > 0) {
+		else if (this.pressL == true) {
 			this.x -= 7;
 		}
+
+		if (this.x < 0) { // too far left
+			this.x = 0;
+		}
+		else if (this.x > canvas.width - this.length) { // too far right
+			this.x = canvas.width - this.length;
+		}
+
 		this.x += this.xDelta
 		this.y += this.yDelta
 	}
@@ -63,30 +71,26 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 		document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
 	}
 
-	keyDownHandler(e) { //
-		if (e.keyCode == 37) {
+	keyDownHandler(event) { //
+		if (event.keyCode == 37) {
 			this.pressL = true;
 		}
-		else if (e.keyCode == 39) {
+		else if (event.keyCode == 39) {
 			this.pressR = true;
 		}
 	}
 
-	keyUpHandler(e) { // Removes status when key is lifted
-		if (e.keyCode == 37) {
+	keyUpHandler(event) { // Removes status when key is lifted
+		if (event.keyCode == 37) {
 			this.pressL = false;
 		}
-		else if (e.keyCode == 39) {
+		else if (event.keyCode == 39) {
 			this.pressR = false;
 		}
 	}
 
-	mouseMoveHandler(e) { // Allows for mouse movements in game
-		// Needs Refactored — has some ugly code
-		let xRel = e.clientX - canvas.offsetLeft;
-		if (xRel - this.length / 2 > 0 && xRel < canvas.width) {
-			this.x = xRel - this.length / 2;
-		}
+	mouseMoveHandler(event) { // Allows for mouse movements in game
+		this.x = event.clientX - canvas.offsetLeft - this.length / 2;
 	}
 }
 
@@ -120,12 +124,14 @@ class Game { // GAME CLASS //
 
 	loop() { // ADDS THE ILLUSION OF MOTION OVER TIME //
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		this.ball.draw();
-		this.brick.draw();
-		this.paddle.draw();
+
 		this.ball.move();
 		this.brick.move();
 		this.paddle.move();
+
+		this.ball.draw();
+		this.brick.draw();
+		this.paddle.draw();
 
 		  // requ...nFrame(this.loop repeatedly calls the loop() function.
 		  //                  ↓ ↓ ↓ ↓ ↓
