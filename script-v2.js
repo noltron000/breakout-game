@@ -27,7 +27,9 @@ class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 	}
 
 	move() { // CATCH-ALL MOVE FUNCTION //
-		if (this.pressR == true && this.x < canvas.width - this.width) {
+		console.log(canvas.width)
+		console.log(this.length)
+		if (this.pressR == true) { // && this.x + this.width < canvas.width
 			this.x += 7;
 		}
 		else if (this.pressL == true && this.x > 0) {
@@ -82,8 +84,8 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 	mouseMoveHandler(e) { // Allows for mouse movements in game
 		// Needs Refactored — has some ugly code
 		let xRel = e.clientX - canvas.offsetLeft;
-		if (xRel > 0 && xRel < canvas.width) {
-			this.x = xRel - this.width / 2;
+		if (xRel - this.length / 2 > 0 && xRel < canvas.width) {
+			this.x = xRel - this.length / 2;
 		}
 	}
 }
@@ -111,9 +113,9 @@ HUD CLASS
 
 class Game { // GAME CLASS //
 	constructor() {
-		this.ball = new Ball(50, 50, 0, 0.5, 15, 'purple')
-		this.brick = new Brick(349, 12, 0, 0.5, 94, 53, 'red', 1)
-		this.paddle = new Paddle(70, 70, 0, 0.5, 50, 75, 'blue', 'a', 'a')
+		this.ball = new Ball(50, 50, 0, 0, 15, 'purple')
+		this.brick = new Brick(349, 12, 0, 0, 94, 53, 'red', 1)
+		this.paddle = new Paddle(70, 70, 0, 0, 50, 75, 'blue', 'a', 'a')
 	}
 
 	loop() { // ADDS THE ILLUSION OF MOTION OVER TIME //
