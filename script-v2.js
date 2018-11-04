@@ -136,5 +136,3 @@ class Game { // GAME CLASS //
 
 const game = new Game()
 game.loop()
-RIGHTWARDS ARROW
-Unicode: U+2192, UTF-8: E2 86 92
