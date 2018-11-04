@@ -79,12 +79,13 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 		this.pressL = pressL;
 		this.pressR = pressR;
 
-		// Setting up keypress event listener
-		// // bind(this) forces "this" context to be used.
-		// // otherwise, "this" will be the entire #document.
-		document.addEventListener("keydown", this.keyDownHandler.bind(this));
-		document.addEventListener("keyup", this.keyUpHandler.bind(this));
+		// Setting up keypress event listener.
+		document.addEventListener("keydown",     this.keyDownHandler.bind(this));
+		document.addEventListener("keyup",         this.keyUpHandler.bind(this));
 		document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
+		  //                                                       ↑ ↑ ↑ ↑ ↑ ↑
+		 // .bind(this) forces "this" context to be remembered in future steps.
+		//otherwise, "this" will be the #document
 	}
 
 	boundary() { // LIMITS MOVEMENT TO CANVAS //
@@ -195,12 +196,12 @@ class Game { // GAME CLASS //
 		this.brick.draw();
 		this.paddle.draw();
 
-		  // requ…nFrame(this.loop repeatedly calls the loop() function.
-		  //                  ↓ ↓ ↓ ↓ ↓
+		 // requ…nFrame(this.loop repeatedly calls the loop() function.
+		//                    ↓↓↓↓↓↓↓↓↓
 		requestAnimationFrame(this.loop.bind(this))
-		  //                           ↑ ↑ ↑ ↑ ↑ ↑
-		  // bind(this) forces "this" context to be remembered.
-		  // otherwise, "this" will be undefined.
+		  //                           ↑↑↑↑↑↑↑↑↑↑↑
+		 // .bind(this) forces "this" context to be remembered.
+		// otherwise, "this" will be undefined.
 	}
 }
 
