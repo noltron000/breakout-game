@@ -18,7 +18,6 @@ class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 		else if (this.x > canvas.width - this.length) { // too far right
 			this.x = canvas.width - this.length;
 		}
-
 		if (this.y < 0) { // too far up
 			this.y = 0;
 		}
@@ -48,6 +47,21 @@ class Ball extends Node { // CREATES GAME BALL WITH PHYSICS //
 		this.radius = radius;
 	}
 
+	boundary() { // LIMITS MOVEMENT TO CANVAS //
+		if (this.x < 0) { // too far left
+			this.x = 0;
+		}
+		else if (this.x > canvas.width - this.radius) { // too far right
+			this.x = canvas.width - this.radius;
+		}
+		if (this.y < 0) { // too far up
+			this.y = 0;
+		}
+		else if (this.y > canvas.height - this.radius) { // too far down
+			this.y = canvas.height - this.radius;
+		}
+	}
+
 	draw() {
 		ctx.fillStyle = this.colour
 		ctx.beginPath();
@@ -73,6 +87,20 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 		document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
 	}
 
+	boundary() { // LIMITS MOVEMENT TO CANVAS //
+		if (this.x < 0) { // too far left
+			this.x = 0;
+		}
+		else if (this.x > canvas.width - this.length) { // too far right
+			this.x = canvas.width - this.length;
+		}
+		if (this.y < 0) { // too far up
+			this.y = 0;
+		}
+		else if (this.y > canvas.height - this.height) { // too far down
+			this.y = canvas.height - this.height;
+		}
+	}
 
 	draw() {
 		ctx.fillStyle = this.colour
@@ -94,7 +122,7 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 		this.boundary()
 	}
 
-	keyDownHandler(event) { //
+	keyDownHandler(event) { // Adds status when key is pressed
 		if (event.keyCode == 37) {
 			this.pressL = true;
 		}
@@ -125,6 +153,21 @@ class Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
 		this.health = health;
 	}
 
+	boundary() { // LIMITS MOVEMENT TO CANVAS //
+		if (this.x < 0) { // too far left
+			this.x = 0;
+		}
+		else if (this.x > canvas.width - this.length) { // too far right
+			this.x = canvas.width - this.length;
+		}
+		if (this.y < 0) { // too far up
+			this.y = 0;
+		}
+		else if (this.y > canvas.height - this.height) { // too far down
+			this.y = canvas.height - this.height;
+		}
+	}
+
 	draw() {
 		ctx.fillStyle = this.colour
 		ctx.beginPath();
@@ -136,7 +179,7 @@ class Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
 
 class Game { // GAME CLASS //
 	constructor() {
-		this.ball = new Ball(50, 50, 0, 0, 15, 'purple')
+		this.ball = new Ball(50, 50, 1, 1, 15, 'purple')
 		this.brick = new Brick(349, 12, 0, 0, 94, 53, 'red', 1)
 		this.paddle = new Paddle(120, canvas.height - 20, 0, 0, 120, 15, 'blue', 'a', 'a')
 	}
@@ -152,7 +195,7 @@ class Game { // GAME CLASS //
 		this.brick.draw();
 		this.paddle.draw();
 
-		  // requ...nFrame(this.loop repeatedly calls the loop() function.
+		  // requ…nFrame(this.loop repeatedly calls the loop() function.
 		  //                  ↓ ↓ ↓ ↓ ↓
 		requestAnimationFrame(this.loop.bind(this))
 		  //                           ↑ ↑ ↑ ↑ ↑ ↑
