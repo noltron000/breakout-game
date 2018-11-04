@@ -83,28 +83,9 @@ const collisionDetection = () => {
 	}
 }
 
-const drawBall = () => {
-	// left edge of paddle, 0, left of paddle + width of paddle, 0
-	let clr = ctx.createLinearGradient(x, y, x + ballRadius, y + ballRadius);
-	clr.addColorStop(0, rainbowMode(ballColor)); // Places a color at the start
-	clr.addColorStop(1, rainbowMode(ballColor + 30)); // Places a color at the end
-	ballColor += 2
-
-	// Fill with gradient
-	ctx.fillStyle = clr;
-
-	// Create gradient
-	ctx.beginPath();
-	ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-	ctx.fill();
-	ctx.stroke();
-	ctx.closePath();
-}
-
 const drawPaddle = () => {
 	// Fill with gradient
 	ctx.fillStyle = 'grey';
-
 	ctx.beginPath();
 	ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
 	ctx.fill();

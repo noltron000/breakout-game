@@ -13,17 +13,28 @@ class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 	draw() { // CATCH-ALL DRAW FUNCTION //
 		ctx.fillStyle = this.colour
 		ctx.beginPath();
-		if (this.radius != undefined) { // This object has a radius. It is a circle.
-			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-		}
-		else if ((this.length != undefined) && (this.height != undefined)) { // This object has a length and width. It is a square.
+		if ((this.length != undefined) && (this.height != undefined)) { // This is a square.
 			ctx.rect(this.x, this.y, this.length, this.height);
 		}
-		else {
-			console.log("This object is neither circle nor square?")
+		else if (this.radius != undefined) { // This object has a radius. It is a circle.
+			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+		}
+		else { // This object is neither square nor circle. Thus, it is henceforth a dot.
+			ctx.rect(this.x, this.y, 1, 1)
 		}
 		ctx.fill();
 		ctx.closePath();
+	}
+
+	move() { // CATCH-ALL MOVE FUNCTION //
+		if (this.pressR == true && this.x < canvas.width - this.width) {
+			this.x += 7;
+		}
+		else if (this.pressL == true && this.x > 0) {
+			this.x -= 7;
+		}
+		this.x += this.xDelta
+		this.y += this.yDelta
 	}
 }
 
@@ -41,36 +52,44 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 		this.height = height;
 		this.pressL = pressL;
 		this.pressR = pressR;
+
+		// Setting up keypress event listener
+		// // bind(this) forces "this" context to be used.
+		// // otherwise, "this" will be the entire #document.
+		document.addEventListener("keydown", this.keyDownHandler.bind(this));
+		document.addEventListener("keyup", this.keyUpHandler.bind(this));
+		document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
 	}
-	keyDownHandler(event) { // Setting up keypress event listener
-		if (event.keyCode == 39) {
-			pressR = true;
+
+	keyDownHandler(e) { //
+		if (e.keyCode == 37) {
+			this.pressL = true;
 		}
-		else if (event.keyCode == 37) {
-			pressL = true;
+		else if (e.keyCode == 39) {
+			this.pressR = true;
 		}
 	}
 
-	keyUpHandler(event) { // Removes status when key is lifted
-		if (event.keyCode == 39) {
-			pressR = false;
+	keyUpHandler(e) { // Removes status when key is lifted
+		if (e.keyCode == 37) {
+			this.pressL = false;
 		}
-		else if (event.keyCode == 37) {
-			pressL = false;
+		else if (e.keyCode == 39) {
+			this.pressR = false;
 		}
 	}
 
-	mouseMoveHandler(event) { // Allows for mouse movements in game
+	mouseMoveHandler(e) { // Allows for mouse movements in game
 		// Needs Refactored — has some ugly code
-		let xRel = event.clientX - canvas.offsetLeft;
+		let xRel = e.clientX - canvas.offsetLeft;
 		if (xRel > 0 && xRel < canvas.width) {
-			paddleX = xRel - paddleWidth / 2;
+			this.x = xRel - this.width / 2;
 		}
 	}
 }
 
 class Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
-	constructor(x, y, length, height, colour, health) {
+	constructor(x, y, xDelta, yDelta, length, height, colour, health) {
 		super(x, y, xDelta, yDelta, colour);
 		this.length = length;
 		this.height = height;
@@ -90,24 +109,32 @@ HUD CLASS
 	SCORES CLASS
 	*/
 
-/*
-GAME CLASS
-*/
 class Game { // GAME CLASS //
 	constructor() {
-		this.ball = new Ball(50, 50, 0, 0, 50, 'blue')
-		this.paddle = new Paddle(70, 70, 0, 0, 50, 75, 'red')
-		// this.brickArray = new BrickArray()
-		// this.hud = new HUD()
+		this.ball = new Ball(50, 50, 0, 0.5, 15, 'purple')
+		this.brick = new Brick(349, 12, 0, 0.5, 94, 53, 'red', 1)
+		this.paddle = new Paddle(70, 70, 0, 0.5, 50, 75, 'blue', 'a', 'a')
 	}
 
-	start() { // ADDS THE ILLUSION OF MOTION OVER TIME //
+	loop() { // ADDS THE ILLUSION OF MOTION OVER TIME //
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		this.ball.draw();
+		this.brick.draw();
+		this.paddle.draw();
+		this.ball.move();
+		this.brick.move();
+		this.paddle.move();
 
+		  // requ...nFrame(this.loop repeatedly calls the loop() function.
+		  //                  ↓ ↓ ↓ ↓ ↓
+		requestAnimationFrame(this.loop.bind(this))
+		  //                           ↑ ↑ ↑ ↑ ↑ ↑
+		  // bind(this) forces "this" context to be remembered.
+		  // otherwise, "this" will be undefined.
 	}
 }
 
 const game = new Game()
-game.start()
-
-game.ball.draw()
-game.paddle.draw()
+game.loop()
+RIGHTWARDS ARROW
+Unicode: U+2192, UTF-8: E2 86 92
