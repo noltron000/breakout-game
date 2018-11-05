@@ -97,7 +97,7 @@ class Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 		document.addEventListener("keydown",     this.keyDownHandler.bind(this));
 		document.addEventListener("keyup",         this.keyUpHandler.bind(this));
 		document.addEventListener("mousemove", this.mouseMoveHandler.bind(this));
-		  //                                                       ↑ ↑ ↑ ↑ ↑ ↑
+		  //                                                        ↑ ↑ ↑ ↑ ↑ ↑
 		 // .bind(this) forces "this" context to be remembered in future steps.
 		//otherwise, "this" will be the #document
 	}
