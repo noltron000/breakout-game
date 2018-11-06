@@ -164,47 +164,165 @@ class Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
 
 class Game { // GAME CLASS //
 	constructor() {
-		this.ballArray   = [   new Ball(50, 50, 2.5, 2.5, 15, 'purple'), new Ball(50, 50, -3, 3, 15, 'purple') ]
-		this.brickArray  = [  new Brick(349, 12, -3, -3, 94, 53, 'red', 1) ]
-		this.paddleArray = [ new Paddle(120, canvas.height - 20, 0, 0, 120, 15, 'blue', 'a', 'a') ]
+		//                x y                   ∆x   ∆y   L   H    Colour
+		this.ballArray = [];
+		this.brickArray = [new Brick(349, 12, -3, -3, 94, 53, 'red', 1)];
+		this.paddleArray = [new Paddle(120, canvas.height - 20, 0, 0, 120, 15, 'blue', false, false)];
+
+		this.ballArray.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, 3, 3, 15, 'purple'));
+		this.ballArray.push(new Ball(Math.random() * canvas.width, Math.random() * canvas.height, 3, 3, 15, 'purple'));
+		this.combinate()
 	}
 
-	newBall() { // CREATES A NEW BALL //
-		this.ball
+	combinate() { // UGLY FUNCTION NEEDS TO BE REFACTORED!!
+		// COLLISION CALCULATION TAKES INTO CONSIDERATION EACH OBJECT AND THE WALL.
+		let i;
+		let j;
+		let iUsed = [];
+		let jUsed = [];
+		let combo = [];
+		let list = [];
+		list = list.concat(this.ballArray, this.brickArray, this.paddleArray);
+
+		for (i in list) {
+			for (j in list) {
+				if (! ((list[i] == list[j]) || (iUsed.includes(list[i]) || iUsed.includes(list[j])) || (jUsed.includes(list[i]) || jUsed.includes(list[j])))) {
+					combo.push([list[i], list[j]])
+					jUsed.push(list[j]);
+				}
+			}
+			iUsed.push(list[i]);
+			jUsed = [];
+		}
+		iUsed = [];
+		for (i in combo) {
+			this.bump(combo[i][0],combo[i][1])
+		}
 	}
 
-	loop() { // ADDS THE ILLUSION OF MOTION OVER TIME //
+
+	collides(aMin, aMax, bMin, bMax) {
+		/*
+			If the height of rectangle A goes from 2 to 3, and the height of rectangle B goes from 4 to 3, would they collide?
+			It depends on their X position. The following variables help determine if they do or not. If any of them are true, then they collide.
+
+				// aWithin1:
+				// 	[bbbbbbbbbbbbbbbbbbbb]
+				// 	            [aaa…
+
+				// bWithin1:
+				// 	[aaaaaaaaaaaaaaaaaaaa]
+				// 	            [bbb…
+
+				// aWithin2:
+				// 	[bbbbbbbbbbbbbbbbbbbb]
+				// 	            …aaa]
+
+				// bWithin2:
+				// 	[aaaaaaaaaaaaaaaaaaaa]
+				// 	            …bbb]
+
+				// together:
+				// 	[aaaaaaaaaaaaaaaaaaaa]
+				// 	[bbbbbbbbbbbbbbbbbbbb]
+
+			Note that this function can be used to check either horizontal and vertical collisions.
+		*/
+
+		const aWithin1 = bMin < aMin < bMax;
+		const aWithin2 = bMin < aMax < bMax;
+		const bWithin1 = aMin < bMin < aMax;
+		const bWithin2 = aMin < bMax < aMax;
+		const together = aMin === bMin && aMax === bMax;
+		const collides = aWithin1 || aWithin2 || bWithin1 || bWithin2 || together;
+	}
+
+
+	passings(aMin, aMax, aDelta, bMin, bMax, bDelta) {
+		/*
+			If a rectangle is moving downwards, and another is moving upwards, how do we know if they pass eachother?
+			It depends on their Y positions and speeds. The following variables help determine if they do or not. If any of them are true, then they pass eachother.
+
+				// passing1: 		// passing2:
+				// 	 [aaa]   		// 	 [bbb]
+				// 	  ↓↓↓    		// 	  ↓↓↓
+				// 	  ↑↑↑    		// 	  ↑↑↑
+				// 	 [bbb]   		// 	 [aaa]
+				// RESULT: both reverse
+
+				// aFaster1: 		// bFaster1:
+				// 	  ↑↑↑    		// 	  ↑↑↑
+				// 	 [bbb]   		// 	 [aaa]
+				// 	  ↑↑↑    		// 	  ↑↑↑
+				// 	  ↑↑↑    		// 	  ↑↑↑
+				// 	 [aaa]   		// 	 [bbb]
+				// RESULT: one reverses
+
+				// aFaster2: 		// bFaster2:
+				// 	  ↓↓↓    		// 	  ↓↓↓
+				// 	 [aaa]   		// 	 [bbb]
+				// 	  ↓↓↓    		// 	  ↓↓↓
+				// 	  ↓↓↓    		// 	  ↓↓↓
+				// 	 [bbb]   		// 	 [aaa]
+				// RESULT: one reverses
+
+			Note that this function can be used to check either horizontal and vertical passings.
+		*/
+
+		const passing1 = aMax;
+
+	}
+
+	draw() { // DRAWS EACH OBJECT IN THEIR NEW POSITION //
+		let index;
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-		let index;
-
 		for (index in this.ballArray) {
-			this.ballArray[index].move();
 			this.ballArray[index].draw();
 		}
 
 		for (index in this.brickArray) {
-			this.brickArray[index].move();
 			this.brickArray[index].draw();
 		}
 
 		for (index in this.paddleArray) {
-			this.paddleArray[index].move();
 			this.paddleArray[index].draw();
 		}
+	}
 
-		 // requ…nFrame(this.loop repeatedly calls the loop() function.
+	move() { // CALCULATES MOVES FOR EACH OBJECT USING DELTAS //
+		let index;
+
+		for (index in this.ballArray) {
+			this.ballArray[index].move();
+		}
+
+		for (index in this.brickArray) {
+			this.brickArray[index].move();
+		}
+
+		for (index in this.paddleArray) {
+			this.paddleArray[index].move();
+		}
+	}
+
+	loop() { // ADDS THE ILLUSION OF MOTION OVER TIME //
+		this.move()
+		this.draw()
+		this.combinate()
+
+		 // req…ionFrame(this.loop… repeatedly calls the loop() function.
 		//                    ↓ ↓ ↓ ↓ ↓
 		requestAnimationFrame(this.loop.bind(this))
 		  //                           ↑ ↑ ↑ ↑ ↑ ↑
-		 // .bind(this) forces "this" context to be remembered.
+		 // ….bind(this) forces "this" context to be remembered.
 		// otherwise, "this" will be undefined.
 	}
 }
 
-const game = new Game()
-game.loop()
-
+const game = new Game();
+// game.combinate();
+game.loop();
 
 
 
@@ -220,3 +338,21 @@ HUD CLASS
 	/*
 	SCORES CLASS
 	*/
+
+
+for comboFunction () {
+	list = [A, B, C, D]
+	// .
+	// .   FUNCTION CONTENT GOES HERE
+	// .
+
+	// RESULTS IN
+	otherFunction(A, B)
+	otherFunction(A, C)
+	otherFunction(A, D)
+
+	otherFunction(B, C)
+	otherFunction(B, D)
+
+	otherFunction(C, D)
+}
