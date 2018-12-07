@@ -1,6 +1,6 @@
-canvas = document.getElementById("myCanvas");
-canvas.length = canvas.width
-ctx = canvas.getContext("2d"); // CANVAS CONTEXT
+const canvas = document.getElementById("myCanvas");
+const canvas.length = canvas.width
+const ctx = canvas.getContext("2d"); // CANVAS CONTEXT
 
 class Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 	constructor(x = 0, y = 0, length = 0, height = 0, xDelta = 0, yDelta = 0, colour = 'grey') {
