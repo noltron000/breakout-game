@@ -1,6 +1,6 @@
 // JavaScript code goes here
-let canvas = document.getElementById("myCanvas");
-let ctx = canvas.getContext("2d"); // CANVAS CONTEXT
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d"); // CANVAS CONTEXT
 
 // Canvas Variables™€
 let MarginTop = 80;
@@ -12,24 +12,24 @@ let x = (canvas.width - MarginSide * 2 - ballRadius * 2) * Math.random() + Margi
 let y = (canvas.height / 3) * Math.random() + canvas.height / 2;
 let dx = 2;
 let dy = -2;
-let max_dx = 24;
-let max_dy = 24;
+const max_dx = 24;
+const max_dy = 24;
 
 // Paddle Variables
-let paddleHeight = 15;
+const paddleHeight = 15;
 let paddleWidth = 288;
-let min_pWidth = paddleWidth / 24
-let paddleRaise = paddleHeight / 2;
+const min_pWidth = paddleWidth / 24
+const paddleRaise = paddleHeight / 2;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
 // Brick Variables
-let brickRowCount = 16;
-let brickColCount = 12;
-let brickPadding = 3;
-let brickHeight = (canvas.height / 3 - MarginTop) / (brickRowCount);
-let brickWidth = (canvas.width - MarginSide * 2 - (brickPadding * (brickRowCount - 1) / brickColCount)) / brickColCount;
+const brickRowCount = 16;
+const brickColCount = 12;
+const brickPadding = 3;
+const brickHeight = (canvas.height / 3 - MarginTop) / (brickRowCount);
+const brickWidth = (canvas.width - MarginSide * 2 - (brickPadding * (brickRowCount - 1) / brickColCount)) / brickColCount;
 
 let bricks = [];
 for (let c = 0; c < brickColCount; c++) {
