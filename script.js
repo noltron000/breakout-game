@@ -10,8 +10,8 @@ let MarginSide = 80;
 let ballRadius = 128;
 let x = (canvas.width - MarginSide * 2 - ballRadius * 2) * Math.random() + MarginSide + ballRadius;
 let y = (canvas.height / 3) * Math.random() + canvas.height / 2;
-let dx = 0.125;
-let dy = -0.125;
+let dx = 2;
+let dy = -2;
 let max_dx = 24;
 let max_dy = 24;
 
@@ -25,10 +25,10 @@ let rightPressed = false;
 let leftPressed = false;
 
 // Brick Variables
-let brickRowCount = 4;
-let brickColCount = 4;
+let brickRowCount = 16;
+let brickColCount = 12;
 let brickPadding = 3;
-let brickHeight = (canvas.height / 2 - MarginTop) / (brickRowCount);
+let brickHeight = (canvas.height / 3 - MarginTop) / (brickRowCount);
 let brickWidth = (canvas.width - MarginSide * 2 - (brickPadding * (brickRowCount - 1) / brickColCount)) / brickColCount;
 
 let bricks = [];
