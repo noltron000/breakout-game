@@ -6,7 +6,6 @@ class MobileObject {
 		// - this.coordinates[2] is acceleration.
 		//
 		// Coordinates is stored in cartesian coordinates. [x,y]
-		// However, polar coordinates can be used as well. [r,θ]
 		//
 		// Its initialized as a 3-by-2 array, filled with undefined.
 		this.coordinates = [...new Array(3)].map(() => new Array(2))
