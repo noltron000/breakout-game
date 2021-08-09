@@ -1,7 +1,9 @@
-// JavaScript code goes here
-let canvas = document.getElementById("myCanvas");
-let ctx = canvas.getContext("2d"); // CANVAS CONTEXT
+// Obtain the canvas
+const canvas = document.getElementById("myCanvas");
+const ctx = canvas.getContext("2d"); // CANVAS CONTEXT
+ctx.fillStyle = 'gray'
 
+/***
 // Canvas Variables™€
 let MarginTop = 80;
 let MarginSide = 80;
@@ -81,7 +83,6 @@ document.addEventListener("mousemove", mouseMoveHandler, false);
 
 
 const getRandomColor = () => {
-	ctx.fillStyle = 'gray'
 	let letters = '0123456789ABCDEF';
 	let color = '#';
 	for (let i = 0; i < 6; i++) {
@@ -250,7 +251,4 @@ const draw = () => {
 
 // SCRIPT OG: INLINE MODE
 draw();
-
-// // SCRIPT v2: USE CLASSES (broken)
-// const game = new Game();
-// game.loop();
+***/
