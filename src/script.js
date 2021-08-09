@@ -358,8 +358,8 @@ class Game { // GAME CLASS //
 }
 
 // JavaScript code goes here
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d"); // CANVAS CONTEXT
+let canvas = document.getElementById("myCanvas");
+let ctx = canvas.getContext("2d"); // CANVAS CONTEXT
 
 // Canvas Variables™€
 let MarginTop = 80;
@@ -512,7 +512,6 @@ const drawBall = () => {
 const drawPaddle = () => {
 	// Fill with gradient
 	ctx.fillStyle = 'grey';
-
 	ctx.beginPath();
 	ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
 	ctx.fill();
