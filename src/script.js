@@ -610,6 +610,6 @@ const draw = () => {
 // SCRIPT OG: INLINE MODE
 draw();
 
-// SCRIPT v2: USE CLASSES (broken)
-const game = new Game();
-game.loop();
+// // SCRIPT v2: USE CLASSES (broken)
+// const game = new Game();
+// game.loop();
