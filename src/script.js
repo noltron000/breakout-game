@@ -1,7 +1,12 @@
+import Game from './classes/game.js'
+
 // Obtain the canvas
-const canvas = document.getElementById("myCanvas");
-const ctx = canvas.getContext("2d"); // CANVAS CONTEXT
-ctx.fillStyle = 'gray'
+const canvasElement = document.getElementById("myCanvas");
+const canvasContext = canvasElement.getContext("2d"); // CANVAS CONTEXT
+canvasContext.fillStyle = 'gray'
+
+// Create a new game context.
+const game = new Game()
 
 /***
 // Canvas Variables™€

@@ -1,10 +1,30 @@
-class OLD__Game { // GAME CLASS //
-	constructor() { //           fun(x,     y, length, height, xDelta, yDelta, colour…
-		this.ballArray = [new Ball(300, 200, 0, 0, 2, 3, 'red', 25)];
-		this.brickArray = [new Brick(360, 200, 50, 50, 0.5, .25, 'blue', 20)];
-		this.paddleArray = [new Paddle(0, 0, 50, 50, 0, 0, 'orange')];
-	}
+import Ball from './ball'
+import Paddle from './paddle'
+import Brick from './brick'
 
+class Game {
+	constructor () {
+		// Creates one ball
+		this.ball = new Ball()
+
+		// Creates one paddle
+		this.paddle = new Paddle()
+
+		// Creates a 5-by-5 array of bricks
+		this.bricks = [...new Array(5)].map(
+			() => [...new Array(5)].map(
+				() => new Brick()
+			)
+		)
+
+		alert("You have started the game.")
+	}
+}
+
+export default Game
+
+/***
+class OLD__Game { // GAME CLASS //
 	combinations() { // RETURNS A LIST OF UNIQUE COMBINATIONS FOR EVERY INTERACTABLE GAME OBJECT
 		let iUsed = [];
 		let jUsed = [];
@@ -74,33 +94,30 @@ class OLD__Game { // GAME CLASS //
 	}
 
 	collides(aMin, aMax, bMin, bMax) {
-		/*
-			If the height of rectangle A goes from 2 to 3, and the height of rectangle B goes from 4 to 3, would they collide?
-			It depends on their X position. The following variables help determine if they do or not. If any of them are true, then they collide.
+		// If the height of rectangle A goes from 2 to 3, and the height of rectangle B goes from 4 to 3, would they collide?
+		// It depends on their X position. The following variables help determine if they do or not. If any of them are true, then they collide.
 
-				// aWithin1:
-				// 	[bbbbbbbbbbbbbbbbbbbb]
-				// 	            [aaa…
+		// 	// aWithin1:
+		// 	// 	[bbbbbbbbbbbbbbbbbbbb]
+		// 	// 	            [aaa…
 
-				// bWithin1:
-				// 	[aaaaaaaaaaaaaaaaaaaa]
-				// 	            [bbb…
+		// 	// bWithin1:
+		// 	// 	[aaaaaaaaaaaaaaaaaaaa]
+		// 	// 	            [bbb…
 
-				// aWithin2:
-				// 	[bbbbbbbbbbbbbbbbbbbb]
-				// 	            …aaa]
+		// 	// aWithin2:
+		// 	// 	[bbbbbbbbbbbbbbbbbbbb]
+		// 	// 	            …aaa]
 
-				// bWithin2:
-				// 	[aaaaaaaaaaaaaaaaaaaa]
-				// 	            …bbb]
+		// 	// bWithin2:
+		// 	// 	[aaaaaaaaaaaaaaaaaaaa]
+		// 	// 	            …bbb]
 
-				// together:
-				// 	[aaaaaaaaaaaaaaaaaaaa]
-				// 	[bbbbbbbbbbbbbbbbbbbb]
+		// 	// together:
+		// 	// 	[aaaaaaaaaaaaaaaaaaaa]
+		// 	// 	[bbbbbbbbbbbbbbbbbbbb]
 
-			Note that this function can be used to check either horizontal and vertical collisions.
-		*/
-
+		// Note that this function can be used to check either horizontal and vertical collisions.
 
 		const aWithin1 = bMin < aMin && aMin < bMax;
 		const aWithin2 = bMin < aMax && aMax < bMax;
@@ -112,35 +129,34 @@ class OLD__Game { // GAME CLASS //
 	}
 
 	reverses(aMin, aMax, aDelta, bMin, bMax, bDelta) {
-		/*
-			If a rectangle is moving downwards, and another is moving upwards, how do we know if they pass eachother?
-			It depends on their Y positions and speeds. The following variables help determine if they do or not. If any of them are true, then they pass eachother.
+		// If a rectangle is moving downwards, and another is moving upwards, how do we know if they pass eachother?
+		// It depends on their Y positions and speeds. The following variables help determine if they do or not. If any of them are true, then they pass eachother.
 
-				// aPassing: 		// bPassing:
-				// 	 [aaa]   		// 	 [bbb]
-				// 	  ↓↓↓    		// 	  ↓↓↓
-				// 	  ↑↑↑    		// 	  ↑↑↑
-				// 	 [bbb]   		// 	 [aaa]
-				// RESULT: both reverse
+		// 	// aPassing: 		// bPassing:
+		// 	// 	 [aaa]   		// 	 [bbb]
+		// 	// 	  ↓↓↓    		// 	  ↓↓↓
+		// 	// 	  ↑↑↑    		// 	  ↑↑↑
+		// 	// 	 [bbb]   		// 	 [aaa]
+		// 	// RESULT: both reverse
 
-				// aFaster1: 		// bFaster1:
-				// 	  ↑↑↑    		// 	  ↑↑↑
-				// 	 [bbb]   		// 	 [aaa]
-				// 	  ↑↑↑    		// 	  ↑↑↑
-				// 	  ↑↑↑    		// 	  ↑↑↑
-				// 	 [aaa]   		// 	 [bbb]
-				// RESULT: one reverses
+		// 	// aFaster1: 		// bFaster1:
+		// 	// 	  ↑↑↑    		// 	  ↑↑↑
+		// 	// 	 [bbb]   		// 	 [aaa]
+		// 	// 	  ↑↑↑    		// 	  ↑↑↑
+		// 	// 	  ↑↑↑    		// 	  ↑↑↑
+		// 	// 	 [aaa]   		// 	 [bbb]
+		// 	// RESULT: one reverses
 
-				// aFaster2: 		// bFaster2:
-				// 	 [aaa]   		// 	 [bbb]
-				// 	  ↓↓↓    		// 	  ↓↓↓
-				// 	  ↓↓↓    		// 	  ↓↓↓
-				// 	 [aaa]   		// 	 [aaa]
-				// 	  ↓↓↓    		// 	  ↓↓↓
-				// RESULT: one reverses
+		// 	// aFaster2: 		// bFaster2:
+		// 	// 	 [aaa]   		// 	 [bbb]
+		// 	// 	  ↓↓↓    		// 	  ↓↓↓
+		// 	// 	  ↓↓↓    		// 	  ↓↓↓
+		// 	// 	 [aaa]   		// 	 [aaa]
+		// 	// 	  ↓↓↓    		// 	  ↓↓↓
+		// 	// RESULT: one reverses
 
-			Note that this function can be used to check either horizontal and vertical passings.
-		*/
+		// Note that this function can be used to check either horizontal and vertical passings.
+
 		const aMore = aMax > bMin // a > b: 	a =is= more than b
 		const bMore = bMax > aMin // b > a: 	b =is= more than a
 		const aWill = aMax + aDelta >= bMin + bDelta // a + ∆a ≥ b + ∆b: 	a =will be= more than b
@@ -212,3 +228,4 @@ class OLD__Game { // GAME CLASS //
 		// otherwise, "this" will be undefined.
 	}
 }
+***/
