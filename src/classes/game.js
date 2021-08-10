@@ -4,22 +4,30 @@ import Brick from './brick.js'
 
 class Game {
 	constructor (canvasElement) {
-		// Track both the canvas element and context
+		// Track both the canvas element and context.
 		this.canvasElement = canvasElement
 		this.canvasContext = canvasElement.getContext('2d')
 
-		// Creates one ball
+		// Create one ball.
 		this.ball = new Ball(this.canvasContext)
 
-		// Creates one paddle
+		// Create one paddle.
 		this.paddle = new Paddle(this.canvasContext)
 
-		// Creates a 5-by-5 array of bricks
+		// Create a 5-by-5 array of bricks.
 		this.bricks = [...new Array(5)].map(
 			() => [...new Array(5)].map(
 				() => new Brick(this.canvasContext)
 			)
 		)
+	}
+
+	get assets () {
+		return [
+			this.ball,
+			this.paddle,
+			...this.bricks.flat(2),
+		]
 	}
 
 	draw () {
@@ -28,6 +36,9 @@ class Game {
 		const width = this.canvasElement.width
 		const height = this.canvasElement.height
 		this.canvasContext.clearRect(0, 0, width, height)
+
+		// Redraw all the game's assets.
+		this.assets.forEach((asset) => asset.draw())
 
 		// Via bind, do not forget "this" in the animationFrame callback.
 		const drawWithThis = this.draw.bind(this)
@@ -203,17 +214,6 @@ class OLD__Game { // GAME CLASS //
 
 		} else { // Neither reverse!
 			return [false, false];
-		}
-	}
-
-	draw() { // DRAWS EACH OBJECT IN THEIR NEW POSITION //
-		let index;
-		for (index in this.ballArray) {
-			this.ballArray[index].draw();
-		} for (index in this.brickArray) {
-			this.brickArray[index].draw();
-		} for (index in this.paddleArray) {
-			this.paddleArray[index].draw();
 		}
 	}
 

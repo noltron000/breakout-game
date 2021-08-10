@@ -5,6 +5,8 @@ class RectangleMOB extends MobileObject {
 		super(canvasContext)
 		this.dimensions = [length, height]
 	}
+
+	draw () {}
 }
 
 export default RectangleMOB
