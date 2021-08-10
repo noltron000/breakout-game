@@ -39,6 +39,19 @@ class Game {
 		]
 	}
 
+	get combinations (assets = this.assets) {
+		const combinations = []
+		// Get every unique combination of the assets.
+		for (let iIndex = 0; iIndex < assets.length; iIndex++) {
+			iAsset = assets[iIndex]
+			for (let jIndex = iIndex + 1; jIndex < assets.length; jIndex++) {
+				jAsset = assets[jIndex]
+				combinations.push([iAsset, jAsset])
+			}
+		}
+		return combinations
+	}
+
 	draw () {
 		// Clear the canvas before redrawing the frame,
 		// 	or else you get ghosted duplicates and afterimages.
