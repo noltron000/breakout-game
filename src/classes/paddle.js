@@ -9,6 +9,7 @@ class Paddle extends RectangleMOB {
 export default Paddle
 
 /***
+-< CLASS STYLE >-
 class OLD__Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 	constructor(x, y, length, height, xDelta, yDelta, colour) {
 		super(x, y, length, height, xDelta, yDelta, colour);
@@ -65,5 +66,54 @@ class OLD__Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 	mouseMoveHandler(event) { // Allows for mouse movements in game
 		this.x = event.clientX - canvas.offsetLeft - this.length / 2;
 	}
+}
+
+-< SEQUENTIAL STYLE >-
+// Paddle Variables
+const paddleHeight = 15;
+let paddleWidth = 288;
+const min_pWidth = paddleWidth / 24
+const paddleRaise = paddleHeight / 2;
+let paddleX = (canvas.width - paddleWidth) / 2;
+let rightPressed = false;
+let leftPressed = false;
+
+// Adding Event Handlers
+const keyDownHandler = (e) => {
+	if (e.keyCode == 39) {
+		rightPressed = true;
+	}
+	else if (e.keyCode == 37) {
+		leftPressed = true;
+	}
+}
+
+const keyUpHandler = (e) => {
+	if (e.keyCode == 39) {
+		rightPressed = false;
+	}
+	else if (e.keyCode == 37) {
+		leftPressed = false;
+	}
+}
+
+const mouseMoveHandler = (e) => {
+	let relativeX = e.clientX - canvas.offsetLeft;
+	if (relativeX > 0 && relativeX < canvas.width) {
+		paddleX = relativeX - paddleWidth / 2;
+	}
+}
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
+const drawPaddle = () => {
+	// Fill with gradient
+	ctx.fillStyle = 'grey';
+	ctx.beginPath();
+	ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
+	ctx.fill();
+	ctx.closePath();
 }
 ***/
