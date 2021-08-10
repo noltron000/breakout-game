@@ -1,7 +1,6 @@
 class MobileObject {
 	#coordinates
 	#nextFrame
-	#nextFrameIsCalculated
 	constructor (canvasContext, {coordinates}) {
 		// Notes:
 		// - this.coordinates[0] is position.
@@ -21,7 +20,7 @@ class MobileObject {
 		})
 
 		this.canvasContext = canvasContext
-		this.#nextFrameIsCalculated = false
+		this.#nextFrame = null
 	}
 
 	get coordinates () {
@@ -30,17 +29,19 @@ class MobileObject {
 
 	set coordinates (givenCoordinates) {
 		this.#coordinates = givenCoordinates
-		this.#nextFrameIsCalculated = false
+		this.#nextFrame = null
 	}
 
 	get nextFrame () {
-		if (!this.#nextFrameIsCalculated) {
+		// If the next frame isnt calculated, calculate it.
+		if (this.#nextFrame === null) {
 			// Loop through every coordinate pair.
-			const nextFrameCoordinates = this.coordinates.map((coordinatePair, index) => {
+			this.#nextFrame = this.coordinates.map((coordinatePair, index) => {
 				// Determine if there is another array after this one.
 				if (index + 1 >= this.coordinates.length) {
 					return coordinatePair // The final array always remains unchanged.
 				}
+
 				// Add the next array's elements to this array's elements, respectively.
 				const nextCoordinatePair = this.coordinates[index + 1]
 				return coordinatePair.map((coordinate, pairIndex) => {
@@ -50,9 +51,9 @@ class MobileObject {
 					return coordinate + nextCoordinate
 				})
 			})
-			this.#nextFrame = nextFrameCoordinates
-			this.#nextFrameIsCalculated = true
 		}
+
+		// Return the calculated next frame.
 		return this.#nextFrame
 	}
 }
@@ -77,11 +78,7 @@ class OLD__Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 		}
 	}
 
-	move() { // MOVE OBJECT
-		this.x += this.xDelta
-		this.y += this.yDelta
-		this.boundary()
-	}
+	...
 }
 ***/
 

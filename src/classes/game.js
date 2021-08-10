@@ -27,18 +27,22 @@ class Game {
 		const brickLength = 65
 		const brickHeight = 30
 
-		// compute the brickPadding
+		// Compute the brickPadding.
 		const brickPadding = (
 			this.canvasElement.width
 			- (gridMargin * 2)
 			- (gridLength * brickLength)
 		) / (gridLength - 1)
 
+		// Map bricks over a grid of the grid length * grid height.
 		this.bricks = [...new Array(gridLength)].map(
 			(_, lengthIndex) => [...new Array(gridHeight)].map(
 				(_, heightIndex) => {
+					// Calculate the x/y coordinates using the map indexes.
 					const xPos = gridMargin + lengthIndex * (brickLength + brickPadding)
 					const yPos = gridMargin + heightIndex * (brickHeight + brickPadding)
+
+					// Create the new brick based on calculated values.
 					return new Brick(this.canvasContext, {
 						coordinates: [[xPos, yPos]],
 						dimensions: [brickLength, brickHeight],
@@ -92,31 +96,7 @@ export default Game
 /***
 -< CLASS STYLE >-
 class OLD__Game { // GAME CLASS //
-	combinations() { // RETURNS A LIST OF UNIQUE COMBINATIONS FOR EVERY INTERACTABLE GAME OBJECT
-		let iUsed = [];
-		let jUsed = [];
-		let combo = [];
-		let array = [].concat(this.ballArray, this.brickArray, this.paddleArray);
-		for (let i in array) {
-			for (let j in array) {
-
-				const matches = array[i] === array[j];        // both iterators refer to the same item
-				const cycled1 = iUsed.includes(array[i]);    // first iterator is in primary tabs list
-				const cycled2 = iUsed.includes(array[j]);   // second iterator is in primary tabs list
-				const cycled3 = jUsed.includes(array[i]);  // first iterator is in secondary tabs list
-				const cycled4 = jUsed.includes(array[j]); // second iterator is in secondary tabs list
-
-				if (!(matches || cycled1 || cycled2 || cycled3 || cycled4)) { // This match is unique!
-					combo.push([array[i], array[j]]); // add to valid unique match list
-					jUsed.push(array[j]); // add j to secondary used item list
-				}
-			}
-			jUsed = []; // Empty secondary tabs list for next iteration of i
-			iUsed.push(array[i]); // add i to primary used item list
-		}
-		iUsed = []; // Empty primary tabs list when finished - no more iterations
-		return combo;
-	}
+	...
 
 	bumpCheck(combo) {
 		let i;
