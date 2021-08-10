@@ -1,4 +1,7 @@
 class MobileObject {
+	#coordinates
+	#nextFrame
+	#nextFrameIsCalculated
 	constructor (canvasContext, {coordinates}) {
 		// Notes:
 		// - this.coordinates[0] is position.
@@ -10,14 +13,13 @@ class MobileObject {
 		// This is an n-by-two array (n>0).
 		// For each array in each frame, the array to the right gets added on.
 		// The first item is always the object's position.
-		this.#coordinates = [...new Array(3)].map(() => new Array(2))
+		this.#coordinates = [[0, 0]]
 
 		// Fill it with what coordinates that we have. It could only be positions.
 		coordinates.forEach((pair, index) => {
 			this.#coordinates[index] = pair
 		})
 
-		this.dimensions = new Array(2)
 		this.canvasContext = canvasContext
 		this.#nextFrameIsCalculated = false
 	}
@@ -36,11 +38,11 @@ class MobileObject {
 			// Loop through every coordinate pair.
 			const nextFrameCoordinates = this.coordinates.map((coordinatePair, index) => {
 				// Determine if there is another array after this one.
-				if (index + 1 > this.coordinates.length) {
+				if (index + 1 >= this.coordinates.length) {
 					return coordinatePair // The final array always remains unchanged.
 				}
 				// Add the next array's elements to this array's elements, respectively.
-				nextCoordinatePair = this.coordinates[index + 1]
+				const nextCoordinatePair = this.coordinates[index + 1]
 				return coordinatePair.map((coordinate, pairIndex) => {
 					// Note that the coordinatePair elements are just x/y coordinate pairs.
 					// We didn't need a map per say, its not like we'll ever have x/y/z coords.

@@ -10,8 +10,8 @@ class Game {
 
 		// Create one ball.
 		this.ball = new Ball(this.canvasContext, {
-			coordinates: [[25, 25]],
-			dimensions: [25, 25],
+			coordinates: [[0, 0], [1,1]],
+			dimensions: [10, 10],
 		})
 
 		// Create one paddle.
@@ -39,7 +39,8 @@ class Game {
 		]
 	}
 
-	get combinations (assets = this.assets) {
+	get combinations () {
+		const assets = this.assets
 		const combinations = []
 		// Get every unique combination of the assets.
 		for (let iIndex = 0; iIndex < assets.length; iIndex++) {
