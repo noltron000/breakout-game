@@ -60,9 +60,11 @@ class Game {
 		]
 	}
 
-	get combinations () {
+	resolveCollisions () {
+		/* STEP 1: combinations */
 		const assets = this.assets
 		const combinations = []
+
 		// Get every unique combination of the assets.
 		for (let iIndex = 0; iIndex < assets.length; iIndex++) {
 			iAsset = assets[iIndex]
@@ -71,7 +73,21 @@ class Game {
 				combinations.push([iAsset, jAsset])
 			}
 		}
-		return combinations
+
+		/* STEP 2: collisions */
+		const collisions = []
+
+		// Determine collisions within all the combinations.
+		for (const [asset1, asset2] of combinations) {
+			if (asset1.collidesWith(asset2)) {
+				collisions.push([asset1, asset2])
+			}
+		}
+
+		/* STEP 3: resolve bounces */
+		for (const [asset1, asset2] of collisions) {
+			this.resolveBounce(asset1, asset2)
+		}
 	}
 
 	draw () {
