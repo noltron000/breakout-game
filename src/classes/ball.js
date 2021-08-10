@@ -1,4 +1,6 @@
-class Ball {
+import RectangleMOB from './rectangle-mob.js'
+
+class Ball extends RectangleMOB {
 	constructor () {}
 }
 

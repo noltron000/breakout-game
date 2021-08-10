@@ -1,4 +1,4 @@
-import MobileObject from './mobile-object'
+import MobileObject from './mobile-object.js'
 
 class RectangleMOB extends MobileObject {
 	constructor (length, height) {

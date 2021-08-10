@@ -1,4 +1,6 @@
-class Paddle {
+import RectangleMOB from './rectangle-mob.js'
+
+class Paddle extends RectangleMOB {
 	constructor () {}
 }
 

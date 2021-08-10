@@ -1,4 +1,6 @@
-class Brick {
+import RectangleMOB from './rectangle-mob.js'
+
+class Brick extends RectangleMOB {
 	constructor () {}
 }
 
