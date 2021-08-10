@@ -1,5 +1,5 @@
 class MobileObject {
-	constructor (canvasContext) {
+	constructor (canvasContext, coordinates) {
 		// Notes:
 		// - this.coordinates[0] is position.
 		// - this.coordinates[1] is velocity.
@@ -9,6 +9,11 @@ class MobileObject {
 		//
 		// Its initialized as a 3-by-2 array, filled with undefined.
 		this.coordinates = [...new Array(3)].map(() => new Array(2))
+		// Fill it with what coordinates that we have. It could only be positions.
+		coordinates.forEach((pair, index) => {
+			this.coordinates[index] = pair
+		})
+
 		this.dimensions = new Array(2)
 		this.canvasContext = canvasContext
 	}

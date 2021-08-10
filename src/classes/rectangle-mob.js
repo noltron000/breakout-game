@@ -1,9 +1,9 @@
 import MobileObject from './mobile-object.js'
 
 class RectangleMOB extends MobileObject {
-	constructor (canvasContext, length, height) {
-		super(canvasContext)
-		this.dimensions = [length, height]
+	constructor (canvasContext, coordinates, dimensions) {
+		super(canvasContext, coordinates)
+		this.dimensions = dimensions
 	}
 
 	draw () {}
