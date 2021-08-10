@@ -1,7 +1,9 @@
 import RectangleMOB from './rectangle-mob.js'
 
 class Ball extends RectangleMOB {
-	constructor () {}
+	constructor (canvasContext, length, height) {
+		super(canvasContext, length, height)
+	}
 }
 
 export default Ball
