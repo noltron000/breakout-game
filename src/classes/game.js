@@ -10,23 +10,40 @@ class Game {
 
 		// Create one ball.
 		this.ball = new Ball(this.canvasContext, {
-			coordinates: [[0, 0], [1,1]],
+			coordinates: [[0, 0], [1, 1]],
 			dimensions: [10, 10],
 		})
 
 		// Create one paddle.
 		this.paddle = new Paddle(this.canvasContext, {
-			coordinates: [[25, 25]],
-			dimensions: [25, 25],
+			coordinates: [[20, this.canvasElement.height - 40]],
+			dimensions: [100, 20],
 		})
 
-		// Create a 5-by-5 array of bricks.
-		this.bricks = [...new Array(5)].map(
-			() => [...new Array(5)].map(
-				() => new Brick(this.canvasContext, {
-					coordinates: [[25, 25]],
-					dimensions: [25, 25],
-				})
+		// Create an array of bricks using these parameters.
+		const gridLength = 6
+		const gridHeight = 5
+		const gridMargin = 20
+		const brickLength = 65
+		const brickHeight = 30
+
+		// compute the brickPadding
+		const brickPadding = (
+			this.canvasElement.width
+			- (gridMargin * 2)
+			- (gridLength * brickLength)
+		) / (gridLength - 1)
+
+		this.bricks = [...new Array(gridLength)].map(
+			(_, lengthIndex) => [...new Array(gridHeight)].map(
+				(_, heightIndex) => {
+					const xPos = gridMargin + lengthIndex * (brickLength + brickPadding)
+					const yPos = gridMargin + heightIndex * (brickHeight + brickPadding)
+					return new Brick(this.canvasContext, {
+						coordinates: [[xPos, yPos]],
+						dimensions: [brickLength, brickHeight],
+					})
+				}
 			)
 		)
 	}
@@ -73,6 +90,7 @@ class Game {
 export default Game
 
 /***
+-< CLASS STYLE >-
 class OLD__Game { // GAME CLASS //
 	combinations() { // RETURNS A LIST OF UNIQUE COMBINATIONS FOR EVERY INTERACTABLE GAME OBJECT
 		let iUsed = [];
