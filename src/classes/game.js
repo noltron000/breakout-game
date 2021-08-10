@@ -21,6 +21,19 @@ class Game {
 			)
 		)
 	}
+
+	draw () {
+		// Clear the canvas before redrawing the frame,
+		// 	or else you get ghosted duplicates and afterimages.
+		const width = this.canvasElement.width
+		const height = this.canvasElement.height
+		this.canvasContext.clearRect(0, 0, width, height)
+
+		// Via bind, do not forget "this" in the animationFrame callback.
+		const drawWithThis = this.draw.bind(this)
+		// Draw the canvas on each and every frame w/changes.
+		requestAnimationFrame(drawWithThis)
+	}
 }
 
 export default Game
@@ -195,7 +208,6 @@ class OLD__Game { // GAME CLASS //
 
 	draw() { // DRAWS EACH OBJECT IN THEIR NEW POSITION //
 		let index;
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		for (index in this.ballArray) {
 			this.ballArray[index].draw();
 		} for (index in this.brickArray) {
@@ -221,13 +233,6 @@ class OLD__Game { // GAME CLASS //
 		this.draw();
 		let combo = this.combinations();
 		this.bumpCheck(combo);
-
-		// req…ionFrame(this.loop… repeatedly calls the loop() function.
-		//                    ↓ ↓ ↓ ↓ ↓
-		requestAnimationFrame(this.loop.bind(this))
-		//                           ↑ ↑ ↑ ↑ ↑ ↑
-		// ….bind(this) forces "this" context to be remembered.
-		// otherwise, "this" will be undefined.
 	}
 }
 ***/

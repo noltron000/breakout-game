@@ -203,7 +203,6 @@ const drawLives = () => {
 }
 
 const draw = () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	drawBall();
 	drawPaddle();
 	drawBricks();
@@ -249,9 +248,8 @@ const draw = () => {
 	x += dx;
 	y += dy;
 	ballRadius /= 1 + 1 / 128;
-	requestAnimationFrame(draw);
 }
-
-// SCRIPT OG: INLINE MODE
-draw();
 ***/
+
+// Start infinitely drawing the canvas every frame.
+game.draw()
