@@ -37,6 +37,7 @@ class MobileObject {
 	}
 }
 
+/***
 class OLD__Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 	constructor(x = 0, y = 0, length = 0, height = 0, xDelta = 0, yDelta = 0, colour = 'grey') {
 		this.x = x;
@@ -78,5 +79,6 @@ class OLD__Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 		this.boundary()
 	}
 }
+***/
 
 export default MobileObject

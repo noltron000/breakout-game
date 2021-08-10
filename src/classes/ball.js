@@ -1,11 +1,10 @@
 class Ball {
-	constructor () {
-		console.log("YOU LOADED A BALL TOO")
-	}
+	constructor () {}
 }
 
 export default Ball
 
+/***
 class OLD__Ball extends Node { // CREATES GAME BALL WITH PHYSICS //`
 	constructor(x, y, length, height, xDelta, yDelta, colour, radius) {
 		super(x, y, length, height, xDelta, yDelta, colour);
@@ -31,3 +30,4 @@ class OLD__Ball extends Node { // CREATES GAME BALL WITH PHYSICS //`
 		ctx.closePath();
 	}
 }
+***/

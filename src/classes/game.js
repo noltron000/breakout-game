@@ -16,8 +16,6 @@ class Game {
 				() => new Brick()
 			)
 		)
-
-		alert("You have started the game.")
 	}
 }
 

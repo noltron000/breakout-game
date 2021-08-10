@@ -4,6 +4,7 @@ class Brick {
 
 export default Brick
 
+/***
 class OLD__Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
 	constructor(x, y, length, height, xDelta, yDelta, colour, health) {
 		super(x, y, length, height, xDelta, yDelta, colour);
@@ -21,3 +22,4 @@ class OLD__Brick extends Node { // CREATES DESTRUCTABLE BRICKS //
 		ctx.closePath();
 	}
 }
+***/
