@@ -1,5 +1,5 @@
 class MobileObject {
-	constructor (canvasContext, coordinates) {
+	constructor (canvasContext, {coordinates}) {
 		// Notes:
 		// - this.coordinates[0] is position.
 		// - this.coordinates[1] is velocity.

@@ -9,15 +9,24 @@ class Game {
 		this.canvasContext = canvasElement.getContext('2d')
 
 		// Create one ball.
-		this.ball = new Ball(this.canvasContext, [[25, 25]], [25, 25])
+		this.ball = new Ball(this.canvasContext, {
+			coordinates: [[25, 25]],
+			dimensions: [25, 25],
+		})
 
 		// Create one paddle.
-		this.paddle = new Paddle(this.canvasContext, [[50, 5]], [5, 5])
+		this.paddle = new Paddle(this.canvasContext, {
+			coordinates: [[25, 25]],
+			dimensions: [25, 25],
+		})
 
 		// Create a 5-by-5 array of bricks.
 		this.bricks = [...new Array(5)].map(
 			() => [...new Array(5)].map(
-				() => new Brick(this.canvasContext, [[3, 100]], [12, 32])
+				() => new Brick(this.canvasContext, {
+					coordinates: [[25, 25]],
+					dimensions: [25, 25],
+				})
 			)
 		)
 	}
