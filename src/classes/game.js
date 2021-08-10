@@ -3,17 +3,21 @@ import Paddle from './paddle.js'
 import Brick from './brick.js'
 
 class Game {
-	constructor () {
+	constructor (canvasElement) {
+		// Track both the canvas element and context
+		this.canvasElement = canvasElement
+		this.canvasContext = canvasElement.getContext('2d')
+
 		// Creates one ball
-		this.ball = new Ball()
+		this.ball = new Ball(this.canvasContext)
 
 		// Creates one paddle
-		this.paddle = new Paddle()
+		this.paddle = new Paddle(this.canvasContext)
 
 		// Creates a 5-by-5 array of bricks
 		this.bricks = [...new Array(5)].map(
 			() => [...new Array(5)].map(
-				() => new Brick()
+				() => new Brick(this.canvasContext)
 			)
 		)
 	}

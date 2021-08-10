@@ -2,11 +2,9 @@ import Game from './classes/game.js'
 
 // Obtain the canvas
 const canvasElement = document.getElementById("myCanvas");
-const canvasContext = canvasElement.getContext("2d"); // CANVAS CONTEXT
-canvasContext.fillStyle = 'gray'
 
 // Create a new game context.
-const game = new Game()
+const game = new Game(canvasElement)
 
 /***
 // Canvas Variables™€
