@@ -1,3 +1,9 @@
+class Paddle {
+	constructor () {}
+}
+
+export default Paddle
+
 class OLD__Paddle extends Node { // CREATES USER CONTROLLED PADDLE //
 	constructor(x, y, length, height, xDelta, yDelta, colour) {
 		super(x, y, length, height, xDelta, yDelta, colour);

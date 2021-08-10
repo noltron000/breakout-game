@@ -1,6 +1,6 @@
-import Ball from './ball'
-import Paddle from './paddle'
-import Brick from './brick'
+import Ball from './ball.js'
+import Paddle from './paddle.js'
+import Brick from './brick.js'
 
 class Game {
 	constructor () {
