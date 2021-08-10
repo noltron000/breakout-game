@@ -45,15 +45,7 @@ class MobileObject {
 
 /***
 class OLD__Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
-	constructor(x = 0, y = 0, length = 0, height = 0, xDelta = 0, yDelta = 0, colour = 'grey') {
-		this.x = x;
-		this.y = y;
-		this.length = length;
-		this.height = height;
-		this.xDelta = xDelta;
-		this.yDelta = yDelta;
-		this.colour = colour;
-	}
+	...
 
 	boundary() { // LIMITS MOVEMENT TO CANVAS //
 		if (this.x < 0) { // too far left
@@ -69,14 +61,6 @@ class OLD__Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
 			this.y = canvas.height - this.height;
 			this.yDelta = -Math.abs(this.yDelta);
 		}
-	}
-
-	draw() { // PIXEL NODE
-		ctx.fillStyle = this.colour
-		ctx.beginPath();
-		ctx.rect(this.x, this.y, length, height)
-		ctx.fill();
-		ctx.closePath();
 	}
 
 	move() { // MOVE OBJECT
