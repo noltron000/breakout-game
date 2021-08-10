@@ -7,39 +7,51 @@ class MobileObject {
 		//
 		// Coordinates is stored in cartesian coordinates. [x,y]
 		//
-		// Its initialized as a 3-by-2 array, filled with undefined.
-		this.coordinates = [...new Array(3)].map(() => new Array(2))
+		// This is an n-by-two array (n>0).
+		// For each array in each frame, the array to the right gets added on.
+		// The first item is always the object's position.
+		this.#coordinates = [...new Array(3)].map(() => new Array(2))
+
 		// Fill it with what coordinates that we have. It could only be positions.
 		coordinates.forEach((pair, index) => {
-			this.coordinates[index] = pair
+			this.#coordinates[index] = pair
 		})
 
 		this.dimensions = new Array(2)
 		this.canvasContext = canvasContext
+		this.#nextFrameIsCalculated = false
 	}
 
-	get position () {
-		return this.coordinates[0]
+	get coordinates () {
+		return this.#coordinates
 	}
 
-	get velocity () {
-		return this.coordinates[1]
+	set coordinates (givenCoordinates) {
+		this.#coordinates = givenCoordinates
+		this.#nextFrameIsCalculated = false
 	}
 
-	get acceleration () {
-		return this.coordinates[2]
-	}
-
-	set position (coordinates) {
-		this.coordinates[0] = coordinates
-	}
-
-	set velocity (coordinates) {
-		this.coordinates[1] = coordinates
-	}
-
-	set acceleration (coordinates) {
-		this.coordinates[2] = coordinates
+	get nextFrame () {
+		if (!this.#nextFrameIsCalculated) {
+			// Loop through every coordinate pair.
+			const nextFrameCoordinates = this.coordinates.map((coordinatePair, index) => {
+				// Determine if there is another array after this one.
+				if (index + 1 > this.coordinates.length) {
+					return coordinatePair // The final array always remains unchanged.
+				}
+				// Add the next array's elements to this array's elements, respectively.
+				nextCoordinatePair = this.coordinates[index + 1]
+				return coordinatePair.map((coordinate, pairIndex) => {
+					// Note that the coordinatePair elements are just x/y coordinate pairs.
+					// We didn't need a map per say, its not like we'll ever have x/y/z coords.
+					const nextCoordinate = nextCoordinatePair[pairIndex]
+					return coordinate + nextCoordinate
+				})
+			})
+			this.#nextFrame = nextFrameCoordinates
+			this.#nextFrameIsCalculated = true
+		}
+		return this.#nextFrame
 	}
 }
 
