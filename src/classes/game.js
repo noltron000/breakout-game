@@ -10,7 +10,7 @@ class Game {
 
 		// Create one ball.
 		this.ball = new Ball(this.canvasContext, {
-			coordinates: [[0, 0], [1, 1]],
+			coordinates: [[40, 350], [0, -1]],
 			dimensions: [10, 10],
 		})
 
@@ -81,13 +81,62 @@ class Game {
 		for (const [asset1, asset2] of combinations) {
 			if (asset1.sharesSpaceWith(asset2, 'nextFrame')) {
 				collisions.push([asset1, asset2])
-				console.log(collisions)
 			}
 		}
 
 		/* STEP 3: resolve bounces */
-		for (const [asset1, asset2] of collisions) {
-			// this.resolveBounce(asset1, asset2)
+		const bouncePairs = collisions.map(([asset1, asset2]) => {
+			const bouncePair = new Map()
+			;[asset1, asset2].forEach((asset) => {
+				// map each asset in the pair to whether it bounces in the x/y plane.
+				bouncePair.set(asset, [false, false])
+			})
+			return bouncePair
+		})
+
+		bouncePairs.forEach((bouncePair) => {
+			const [asset1, asset2] = bouncePair.keys()
+			const bounceAxis = [
+				!asset1.sharesDomainWith(asset2),
+				!asset1.sharesRangeWith(asset2),
+			]
+			;[asset1, asset2].forEach((asset) => {
+				bouncePair.set(asset, bounceAxis)
+			})
+		})
+
+		const bounces = bouncePairs.reduce((bounces, bouncePair) => {
+			for (const asset of bouncePair.keys()) {
+				const bounceAxis1 = bouncePair.get(asset)
+				if (bounces.has(asset)) {
+					const bounceAxis2 = bounces.get(asset)
+					const newBounceAxis = [
+						bounceAxis1[0] || bounceAxis2[0],
+						bounceAxis1[1] || bounceAxis2[1],
+					]
+					bounces.set(asset, newBounceAxis)
+				}
+				else {
+					bounces.set(asset, bounceAxis1)
+				}
+			}
+			return bounces
+		}, new Map())
+
+		for (const [asset, bounce] of bounces.entries()) {
+			const newCoords = [
+				asset.coordinates[0],
+				...asset.coordinates.slice(1).map((pair) => pair.map((magnitude, axis) => {
+					if (bounce[axis]) {
+						return magnitude
+					}
+					else {
+						return -magnitude
+					}
+				}))
+			]
+			console.log('newCoords', newCoords)
+			asset.coordinates = newCoords
 		}
 	}
 
