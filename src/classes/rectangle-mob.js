@@ -39,6 +39,30 @@ class RectangleMOB extends MobileObject {
 		return this.yPos + this.height
 	}
 
+	get nextXPos () {
+		return this.nextFrame[0][0]
+	}
+
+	get nextLeft () {
+		return this.nextXPos
+	}
+
+	get nextRight () {
+		return this.nextXPos + this.length
+	}
+
+	get nextYPos () {
+		return this.nextFrame[0][1]
+	}
+
+	get nextUp () {
+		return this.nextYPos
+	}
+
+	get nextDown () {
+		return this.nextYPos + this.height
+	}
+
 	// This diagram might help...
 	// O<=>O   X<->X ❌️
 	// X<->X   O<=>O ❌️
@@ -49,27 +73,41 @@ class RectangleMOB extends MobileObject {
 	// ...Where X and O are this and that.
 	// Arrows connect between left and right Xs and Os.
 
-	sharesDomainWith (that) {
+	sharesDomainWith (that, phase='thisFrame') {
+		let left = 'left'
+		let right = 'right'
+		if (phase === 'nextFrame') {
+			left = 'nextLeft'
+			right = 'nextRight'
+		}
+
 		return (
-			this.left < that.right
+			this[left] < that[right]
 		) && (
-			that.left < this.right
+			that[left] < this[right]
 		)
 	}
 
-	sharesRangeWith (that) {
+	sharesRangeWith (that, phase='thisFrame') {
+		let up = 'up'
+		let down = 'down'
+		if (phase === 'nextFrame') {
+			up = 'nextUp'
+			down = 'nextDown'
+		}
+
 		return (
-			this.up < that.down
+			this[up] < that[down]
 		) && (
-			that.up < this.down
+			that[up] < this[down]
 		)
 	}
 
-	sharesSpaceWith (that) {
+	sharesSpaceWith (that, phase='thisFrame') {
 		return (
-			this.sharesDomainWith(that)
+			this.sharesDomainWith(that, phase)
 		) && (
-			this.sharesRangeWith(that)
+			this.sharesRangeWith(that, phase)
 		)
 	}
 

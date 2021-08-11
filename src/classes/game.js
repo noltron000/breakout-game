@@ -67,9 +67,9 @@ class Game {
 
 		// Get every unique combination of the assets.
 		for (let iIndex = 0; iIndex < assets.length; iIndex++) {
-			iAsset = assets[iIndex]
+			const iAsset = assets[iIndex]
 			for (let jIndex = iIndex + 1; jIndex < assets.length; jIndex++) {
-				jAsset = assets[jIndex]
+				const jAsset = assets[jIndex]
 				combinations.push([iAsset, jAsset])
 			}
 		}
@@ -79,14 +79,15 @@ class Game {
 
 		// Determine collisions within all the combinations.
 		for (const [asset1, asset2] of combinations) {
-			if (asset1.collidesWith(asset2)) {
+			if (asset1.sharesSpaceWith(asset2, 'nextFrame')) {
 				collisions.push([asset1, asset2])
+				console.log(collisions)
 			}
 		}
 
 		/* STEP 3: resolve bounces */
 		for (const [asset1, asset2] of collisions) {
-			this.resolveBounce(asset1, asset2)
+			// this.resolveBounce(asset1, asset2)
 		}
 	}
 
@@ -96,6 +97,9 @@ class Game {
 		const width = this.canvasElement.width
 		const height = this.canvasElement.height
 		this.canvasContext.clearRect(0, 0, width, height)
+
+		// Before redrawing, resolve any collisions.
+		this.resolveCollisions()
 
 		// Redraw all the game's assets.
 		this.assets.forEach((asset) => asset.draw())
