@@ -1,41 +1,82 @@
 import Ball from './ball.js'
-import Paddle from './paddle.js'
 import Brick from './brick.js'
+import Paddle from './paddle.js'
 
 class Game {
 	constructor (canvasElement) {
 		// Track both the canvas element and context.
-		this.canvasElement = canvasElement
-		this.canvasContext = canvasElement.getContext('2d')
+		this.canvas = {
+			element: canvasElement,
+			context: canvasElement.getContext('2d'),
+		}
 
-		// Create one ball.
-		this.ball = new Ball(this.canvasContext, {
+		// Track game variables in the state.
+		this.state = {
+			lives: 3,
+			score: 0,
+			pause: false,
+		}
+
+		// Prepare mobile objects
+		this.balls = [this.createBall()]
+		this.bricks = this.createBrickArray()
+		this.paddles = [this.createPaddle()]
+
+		console.dir(this)
+	}
+
+	get mobileObjects () {
+		return [
+			...this.balls,
+			...this.paddles,
+			...this.bricks,
+		]
+	}
+
+	// Creates one ball.
+	createBall () {
+		return new Ball(this.canvas.context, {
 			coordinates: [[40, 350], [0, -1]],
 			dimensions: [10, 10],
 		})
+	}
 
-		// Create one paddle.
-		this.paddle = new Paddle(this.canvasContext, {
-			coordinates: [[20, this.canvasElement.height - 40]],
+	/*
+	// Creates one brick.
+	createBrick () {}
+	*/
+
+	// Creates one paddle.
+	createPaddle () {
+		return new Paddle(this.canvas.context, {
+			coordinates: [[20, this.canvas.element.height - 40]],
 			dimensions: [100, 20],
 		})
+	}
 
-		// Create an array of bricks using these parameters.
-		const gridLength = 6
-		const gridHeight = 5
-		const gridMargin = 20
-		const brickLength = 65
-		const brickHeight = 30
-
+	// Create an array of bricks using these parameters.
+	createBrickArray ({
+		gridLength,
+		gridHeight,
+		gridMargin,
+		brickLength,
+		brickHeight,
+	} = {
+		gridLength: 6,
+		gridHeight: 5,
+		gridMargin: 20,
+		brickLength: 65,
+		brickHeight: 30,
+	}) {
 		// Compute the brickPadding.
 		const brickPadding = (
-			this.canvasElement.width
+			this.canvas.element.width
 			- (gridMargin * 2)
 			- (gridLength * brickLength)
 		) / (gridLength - 1)
 
 		// Map bricks over a grid of the grid length * grid height.
-		this.bricks = [...new Array(gridLength)].map(
+		const bricks = [...new Array(gridLength)].map(
 			(_, lengthIndex) => [...new Array(gridHeight)].map(
 				(_, heightIndex) => {
 					// Calculate the x/y coordinates using the map indexes.
@@ -43,23 +84,19 @@ class Game {
 					const yPos = gridMargin + heightIndex * (brickHeight + brickPadding)
 
 					// Create the new brick based on calculated values.
-					return new Brick(this.canvasContext, {
+					return new Brick(this.canvas.context, {
 						coordinates: [[xPos, yPos]],
 						dimensions: [brickLength, brickHeight],
 					})
 				}
 			)
 		)
+
+		// Finally, flatten the bricks 2D-matrix into a single array.
+		return bricks.flat()
 	}
 
-	get assets () {
-		return [
-			this.ball,
-			this.paddle,
-			...this.bricks.flat(2),
-		]
-	}
-
+	// TODO: Fix clarity of collisions
 	resolveCollisions () {
 		/* STEP 1: combinations */
 		const assets = this.assets
@@ -143,15 +180,16 @@ class Game {
 	draw () {
 		// Clear the canvas before redrawing the frame,
 		// 	or else you get ghosted duplicates and afterimages.
-		const width = this.canvasElement.width
-		const height = this.canvasElement.height
-		this.canvasContext.clearRect(0, 0, width, height)
+		const width = this.canvas.element.width
+		const height = this.canvas.element.height
+		this.canvas.context.clearRect(0, 0, width, height)
 
-		// Before redrawing, resolve any collisions.
-		this.resolveCollisions()
+		// TODO: Fix clarity of collisions
+		// // Before redrawing, resolve any collisions.
+		// this.resolveCollisions()
 
 		// Redraw all the game's assets.
-		this.assets.forEach((asset) => asset.draw())
+		this.mobileObjects.forEach((asset) => asset.draw())
 
 		// Via bind, do not forget "this" in the animationFrame callback.
 		const drawWithThis = this.draw.bind(this)
