@@ -8,3 +8,10 @@ If you prefer to use a mouse cursor, that option is available to you.
 
 ## Details
 For Make School's Backend Web 1.2 course.
+
+Objects in the game:
+- Heads up display
+- Game Board
+- Bricks
+- Ball
+- Paddle
