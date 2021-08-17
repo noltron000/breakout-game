@@ -44,6 +44,39 @@ class MobileObject {
 		return this.nextFrame[0][1]
 	}
 
+	get left () {
+		return this.xPos
+	}
+
+	get right () {
+		return this.xPos
+	}
+
+	get up () {
+		return this.yPos
+	}
+
+	get down () {
+		return this.yPos
+	}
+
+	get nextLeft () {
+		return this.nextXPos
+	}
+
+	get nextRight () {
+		return this.nextXPos
+	}
+
+	get nextUp () {
+		return this.nextYPos
+	}
+
+	get nextDown () {
+		return this.nextYPos
+	}
+
+
 	set coordinates (givenCoordinates) {
 		this.#coordinates = givenCoordinates
 		this.#nextFrame = null

@@ -15,32 +15,16 @@ class RectangleMOB extends MobileObject {
 		return this.dimensions[1]
 	}
 
-	get left () {
-		return this.xPos
-	}
-
 	get right () {
 		return this.xPos + this.length
-	}
-
-	get up () {
-		return this.yPos
 	}
 
 	get down () {
 		return this.yPos + this.height
 	}
 
-	get nextLeft () {
-		return this.nextXPos
-	}
-
 	get nextRight () {
 		return this.nextXPos + this.length
-	}
-
-	get nextUp () {
-		return this.nextYPos
 	}
 
 	get nextDown () {
