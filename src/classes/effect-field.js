@@ -68,6 +68,56 @@ class EffectField {
 		else return false
 	}
 
+	static moveUpEffect (mob) {
+		const canvasHeight = this.game.canvas.element.height
+		const coordinates = [...mob.coordinates]
+
+		// Y Coordinates can't exceed the board's height.
+		if (coordinates[0][1] >= canvasHeight) coordinates[0][1] = canvasHeight
+		// Y Velocity must be negative.
+		if (coordinates[1][1] > 0) coordinates[1][1] = -coordinates[1][1]
+
+		// Set the MOB's coordinates now.
+		mob.coordinates = coordinates
+	}
+
+	static moveDownEffect (mob) {
+		const coordinates = [...mob.coordinates]
+
+		// Y Coordinates can't go below zero.
+		if (coordinates[0][1] <= 0) coordinates[0][1] = 0
+		// Y Velocity must be positive.
+		if (coordinates[1][1] < 0) coordinates[1][1] = -coordinates[1][1]
+
+		// Set the MOB's coordinates now.
+		mob.coordinates = coordinates
+	}
+
+	static moveLeftEffect (mob) {
+		const canvasLength = this.game.canvas.element.length
+		const coordinates = [...mob.coordinates]
+
+		// X Coordinates can't exceed the board's length.
+		if (coordinates[0][1] >= canvasLength) coordinates[0][1] = canvasLength
+		// X Velocity must be negative.
+		if (coordinates[1][1] > 0) coordinates[1][1] = -coordinates[1][1]
+
+		// Set the MOB's coordinates now.
+		mob.coordinates = coordinates
+	}
+
+	static moveRightEffect (mob) {
+		const coordinates = [...mob.coordinates]
+
+		// X Coordinates can't go below zero.
+		if (coordinates[0][0] <= 0) coordinates[0][0] = 0
+		// X Velocity must be positive.
+		if (coordinates[1][0] < 0) coordinates[1][0] = -coordinates[1][0]
+
+		// Set the MOB's coordinates now.
+		mob.coordinates = coordinates
+	}
+
 	static downWallBallTrigger (mob) {
 		if (mob instanceof Ball) {
 			return this.downWallTrigger(mob)
