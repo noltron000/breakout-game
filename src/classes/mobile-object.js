@@ -19,12 +19,29 @@ class MobileObject {
 			this.#coordinates[index] = pair
 		})
 
+		this.health = null
 		this.canvasContext = canvasContext
 		this.#nextFrame = null
 	}
 
 	get coordinates () {
 		return this.#coordinates
+	}
+
+	get xPos () {
+		return this.coordinates[0][0]
+	}
+
+	get yPos () {
+		return this.coordinates[0][1]
+	}
+
+	get nextXPos () {
+		return this.nextFrame[0][0]
+	}
+
+	get nextYPos () {
+		return this.nextFrame[0][1]
 	}
 
 	set coordinates (givenCoordinates) {

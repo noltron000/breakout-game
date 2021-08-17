@@ -15,20 +15,12 @@ class RectangleMOB extends MobileObject {
 		return this.dimensions[1]
 	}
 
-	get xPos () {
-		return this.coordinates[0][0]
-	}
-
 	get left () {
 		return this.xPos
 	}
 
 	get right () {
 		return this.xPos + this.length
-	}
-
-	get yPos () {
-		return this.coordinates[0][1]
 	}
 
 	get up () {
@@ -39,20 +31,12 @@ class RectangleMOB extends MobileObject {
 		return this.yPos + this.height
 	}
 
-	get nextXPos () {
-		return this.nextFrame[0][0]
-	}
-
 	get nextLeft () {
 		return this.nextXPos
 	}
 
 	get nextRight () {
 		return this.nextXPos + this.length
-	}
-
-	get nextYPos () {
-		return this.nextFrame[0][1]
 	}
 
 	get nextUp () {
