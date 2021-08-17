@@ -12,78 +12,65 @@ class EffectField {
 		this.functions = []
 	}
 
-	wallBounce (mob) {
-		const {
-			length: canvasLength,
-			height: canvasHeight,
-		} = this.game.canvas.element
+	static leftWallTrigger (mob) {
+		// Get the length of the game board.
+		const canvasLength = this.game.canvas.element.length
 
-		if (mob.nextLeft < 0 && mob.nextRight > canvasLength) {
-			// a weird (but possible) case where the canvas is too thin.
-			// if this happens, do nothing.
-		}
-		else if (mob.nextLeft < 0) {
-			const coordinates = [...mob.coordinates]
+		// If the object is wider than the canvas, its possible
+		// 	that the object is both too left and too right.
+		// When this happens, block this effect trigger.
+		if (mob.nextRight > canvasLength) return false
 
-			// minimum xPos / left is zero
-			coordinates[0][0] = 0
-
-			// increasing x velocity only
-			coordinates[1][0] = Math.abs(coordinates[1][0])
-
-			// set the new coordinates
-			mob.coordinates = coordinates
-		}
-		else if (mob.nextRight > canvasLength) {
-			const coordinates = [...mob.coordinates]
-
-			// maximum xPos+length / right is canvas length
-			coordinates[0][0] = canvasLength
-
-			// decreasing x velocity only
-			coordinates[1][0] = -Math.abs(coordinates[1][0])
-
-			// set the new coordinates
-			mob.coordinates = coordinates
-		}
-
-		if (mob.nextUp < 0 && mob.nextDown > canvasHeight) {
-			// a weird (but possible) case where the canvas is too short.
-			// if this happens, do nothing.
-		}
-		else if (mob.nextUp < 0) {
-			const coordinates = [...mob.coordinates]
-
-			// minimum yPos / up is zero (canvas top)
-			coordinates[0][1] = 0
-
-			// increasing y velocity only (go back down)
-			coordinates[1][1] = Math.abs(coordinates[1][1])
-
-			// set the new coordinates
-			mob.coordinates = coordinates
-		}
-		else if (mob.nextDown > canvasHeight) {
-			const coordinates = [...mob.coordinates]
-
-			// maximum yPos+height / down is canvas height (bottom)
-			coordinates[0][1] = canvasHeight
-
-			// decreasing y velocity only (go back up)
-			coordinates[1][1] = -Math.abs(coordinates[1][1])
-
-			// set the new coordinates
-			mob.coordinates = coordinates
-		}
+		// Activate if the MOB would sink into the left wall.
+		else if (mob.nextLeft < 0) return true
+		else return false
 	}
 
-	wallBounceBall (mob) {
-		const {
-			height: canvasHeight,
-		} = this.game.canvas.element
+	static rightWallTrigger (mob) {
+		// Get the length of the game board.
+		const canvasLength = this.game.canvas.element.length
 
-		if (mob.nextDown > canvasHeight) {
-			mob.health -= 1
+		// If the object is wider than the canvas, its possible
+		// 	that the object is both too left and too right.
+		// When this happens, block this effect trigger.
+		if (mob.nextLeft < 0) return false
+
+		// Activate if the MOB would sink into the right wall.
+		else if (mob.nextRight > canvasLength) return true
+		else return false
+	}
+
+	static upWallTrigger (mob) {
+		// Get the height of the game board.
+		const canvasHeight = this.game.canvas.element.height
+
+		// If the object is taller than the canvas, its possible
+		// 	that the object is both too high and too low.
+		// When this happens, block this effect trigger.
+		if (mob.nextDown > canvasHeight) return false
+
+		// Activate if the MOB would sink into the upper wall.
+		else if (mob.nextUp < 0) return true
+		else return false
+	}
+
+	static downWallTrigger (mob) {
+		// Get the height of the game board.
+		const canvasHeight = this.game.canvas.element.height
+
+		// If the object is taller than the canvas, its possible
+		// 	that the object is both too high and too low.
+		// When this happens, block this effect trigger.
+		if (mob.nextUp < 0) return false
+
+		// Activate if the MOB would sink into the lower wall.
+		else if (mob.nextDown > canvasHeight) return true
+		else return false
+	}
+
+	static downWallBallTrigger (mob) {
+		if (mob instanceof Ball) {
+			return this.downWallTrigger(mob)
 		}
 	}
 }
