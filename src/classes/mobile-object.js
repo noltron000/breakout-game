@@ -75,28 +75,4 @@ class MobileObject {
 	}
 }
 
-/***
-class OLD__Node { // PARENT NODE — SETS UP INTERACTABLE SHAPES //
-	...
-
-	boundary() { // LIMITS MOVEMENT TO CANVAS //
-		if (this.x < 0) { // too far left
-			this.x = 0;
-			this.xDelta = Math.abs(this.xDelta);
-		} else if (this.x > canvas.width - this.length) { // too far right
-			this.x = canvas.width - this.length;
-			this.xDelta = -Math.abs(this.xDelta);
-		} if (this.y < 0) { // too far up
-			this.y = 0;
-			this.yDelta = Math.abs(this.yDelta);
-		} else if (this.y > canvas.height - this.height) { // too far down
-			this.y = canvas.height - this.height;
-			this.yDelta = -Math.abs(this.yDelta);
-		}
-	}
-
-	...
-}
-***/
-
 export default MobileObject
