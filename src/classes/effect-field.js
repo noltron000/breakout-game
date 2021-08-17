@@ -12,34 +12,6 @@ class EffectField {
 		this.functions = []
 	}
 
-	static leftWallTrigger (mob) {
-		// Get the length of the game board.
-		const canvasLength = this.game.canvas.element.length
-
-		// If the object is wider than the canvas, its possible
-		// 	that the object is both too left and too right.
-		// When this happens, block this effect trigger.
-		if (mob.nextRight > canvasLength) return false
-
-		// Activate if the MOB would sink into the left wall.
-		else if (mob.nextLeft < 0) return true
-		else return false
-	}
-
-	static rightWallTrigger (mob) {
-		// Get the length of the game board.
-		const canvasLength = this.game.canvas.element.length
-
-		// If the object is wider than the canvas, its possible
-		// 	that the object is both too left and too right.
-		// When this happens, block this effect trigger.
-		if (mob.nextLeft < 0) return false
-
-		// Activate if the MOB would sink into the right wall.
-		else if (mob.nextRight > canvasLength) return true
-		else return false
-	}
-
 	static upWallTrigger (mob) {
 		// Get the height of the game board.
 		const canvasHeight = this.game.canvas.element.height
@@ -65,6 +37,34 @@ class EffectField {
 
 		// Activate if the MOB would sink into the lower wall.
 		else if (mob.nextDown > canvasHeight) return true
+		else return false
+	}
+
+	static leftWallTrigger (mob) {
+		// Get the length of the game board.
+		const canvasLength = this.game.canvas.element.length
+
+		// If the object is wider than the canvas, its possible
+		// 	that the object is both too left and too right.
+		// When this happens, block this effect trigger.
+		if (mob.nextRight > canvasLength) return false
+
+		// Activate if the MOB would sink into the left wall.
+		else if (mob.nextLeft < 0) return true
+		else return false
+	}
+
+	static rightWallTrigger (mob) {
+		// Get the length of the game board.
+		const canvasLength = this.game.canvas.element.length
+
+		// If the object is wider than the canvas, its possible
+		// 	that the object is both too left and too right.
+		// When this happens, block this effect trigger.
+		if (mob.nextLeft < 0) return false
+
+		// Activate if the MOB would sink into the right wall.
+		else if (mob.nextRight > canvasLength) return true
 		else return false
 	}
 
