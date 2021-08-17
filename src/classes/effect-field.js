@@ -68,6 +68,12 @@ class EffectField {
 		else return false
 	}
 
+	static downWallBallTrigger (mob) {
+		if (mob instanceof Ball) {
+			return this.downWallTrigger(mob)
+		}
+	}
+
 	static moveUpEffect (mob) {
 		const canvasHeight = this.game.canvas.element.height
 		const coordinates = [...mob.coordinates]
@@ -118,9 +124,4 @@ class EffectField {
 		mob.coordinates = coordinates
 	}
 
-	static downWallBallTrigger (mob) {
-		if (mob instanceof Ball) {
-			return this.downWallTrigger(mob)
-		}
-	}
 }
