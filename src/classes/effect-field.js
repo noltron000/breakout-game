@@ -1,15 +1,18 @@
+import Ball from './ball.js'
+
 class EffectField {
-	constructor (game, {trigger}) {
-		this.game = game
+	static game = undefined
 
-		// When does this effect field trigger?
-		// Does it trigger when an object is just touching the field?
-		// Or does it only trigger when an object is completely within the field?
-		this.trigger = 'touch' // alternative is 'engulf'
+	static wallEffectFields (mob) {
+		const functions = [
+			(mob) => {if (this.downWallBallTrigger(mob)) this.damageEffect(mob)},
+			(mob) => {if (this.upWallTrigger(mob)) this.moveDownEffect(mob)},
+			(mob) => {if (this.downWallTrigger(mob)) this.moveUpEffect(mob)},
+			(mob) => {if (this.leftWallTrigger(mob)) this.moveRightEffect(mob)},
+			(mob) => {if (this.rightWallTrigger(mob)) this.moveLeftEffect(mob)},
+		]
 
-		// This class doesn't start with any effect functions.
-		// Please provide effect functions after you instantiate your field.
-		this.functions = []
+		functions.forEach(fx => fx(mob))
 	}
 
 	static upWallTrigger (mob) {
@@ -69,9 +72,9 @@ class EffectField {
 	}
 
 	static downWallBallTrigger (mob) {
-		if (mob instanceof Ball) {
-			return this.downWallTrigger(mob)
-		}
+		if (mob instanceof Ball
+			&& this.downWallTrigger(mob)) return true
+		else return false
 	}
 
 	static moveUpEffect (mob) {
@@ -124,4 +127,9 @@ class EffectField {
 		mob.coordinates = coordinates
 	}
 
+	static damageEffect (mob) {
+		mob.health -= 1
+	}
 }
+
+export default EffectField

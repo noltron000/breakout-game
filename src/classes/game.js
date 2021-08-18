@@ -1,9 +1,15 @@
 import Ball from './ball.js'
 import Brick from './brick.js'
 import Paddle from './paddle.js'
+import EffectField from './effect-field.js'
 
 class Game {
 	constructor (canvasElement) {
+		// HACK:
+		// Temp hack to make effect-field work
+		// Expects only one game object ever
+		EffectField.game = this
+
 		// Track both the canvas element and context.
 		this.canvas = {
 			element: canvasElement,
@@ -96,7 +102,6 @@ class Game {
 		return bricks.flat()
 	}
 
-	// TODO: Fix clarity of collisions
 	resolveCollisions () {
 		/* STEP 1: combinations */
 		const assets = this.assets
@@ -187,6 +192,9 @@ class Game {
 		// TODO: Fix clarity of collisions
 		// // Before redrawing, resolve any collisions.
 		// this.resolveCollisions()
+
+		// Apply effect fields last because their rules are most important.
+		this.mobileObjects.forEach((mob) => EffectField.wallEffectFields(mob))
 
 		// Redraw all the game's assets.
 		this.mobileObjects.forEach((asset) => asset.draw())
