@@ -40,54 +40,6 @@ class RectangleMOB extends MobileObject {
 		return this.nextYPos + this.height
 	}
 
-	// This diagram might help...
-	// O<=>O   X<->X ❌️
-	// X<->X   O<=>O ❌️
-	// O<=<X>=>O-->X ✔️
-	// X<-<O<=<X>=>O ✔️
-	// O<=<X<->X>=>O ✔️
-	// X<-<O<=>O>->X ✔️
-	// ...Where X and O are this and that.
-	// Arrows connect between left and right Xs and Os.
-
-	sharesDomainWith (that, phase='thisFrame') {
-		let left = 'left'
-		let right = 'right'
-		if (phase === 'nextFrame') {
-			left = 'nextLeft'
-			right = 'nextRight'
-		}
-
-		return (
-			this[left] < that[right]
-		) && (
-			that[left] < this[right]
-		)
-	}
-
-	sharesRangeWith (that, phase='thisFrame') {
-		let top = 'top'
-		let bottom = 'bottom'
-		if (phase === 'nextFrame') {
-			top = 'nextTop'
-			bottom = 'nextBotom'
-		}
-
-		return (
-			this[top] < that[bottom]
-		) && (
-			that[top] < this[bottom]
-		)
-	}
-
-	sharesSpaceWith (that, phase='thisFrame') {
-		return (
-			this.sharesDomainWith(that, phase)
-		) && (
-			this.sharesRangeWith(that, phase)
-		)
-	}
-
 	checkFieldTriggers () {
 		this.triggersEffects.fieldTriggers.forEach((fx) => fx())
 	}

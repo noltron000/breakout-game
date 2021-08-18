@@ -80,10 +80,66 @@ class TriggersEffects {
 	/* Collision Triggers */
 
 	// TODO
-	// topCollision
-	// bottomCollision
-	// leftCollision
-	// rightCollision
+	// topCollisionWith
+	// bottomCollisionWith
+	// leftCollisionWith
+	// rightCollisionWith
+
+	/* Helper Triggers */
+
+	// This diagram might help...
+	// O<=>O   X<->X ❌️
+	// X<->X   O<=>O ❌️
+	// O<=<X>=>O-->X ✔️
+	// X<-<O<=<X>=>O ✔️
+	// O<=<X<->X>=>O ✔️
+	// X<-<O<=>O>->X ✔️
+	// ...Where X and O are thisMob and thatMob.
+	// Arrows connect between left and right Xs and Os.
+
+	sharesDomainWith (thatMob, phase='thisFrame') {
+		const thisMob = this.mob
+
+		let left = 'left'
+		let right = 'right'
+		if (phase === 'nextFrame') {
+			left = 'nextLeft'
+			right = 'nextRight'
+		}
+
+		return (
+			thisMob[left] < thatMob[right]
+		) && (
+			thatMob[left] < thisMob[right]
+		)
+	}
+
+	sharesRangeWith (thatMob, phase='thisFrame') {
+		const thisMob = this.mob
+
+		let top = 'top'
+		let bottom = 'bottom'
+		if (phase === 'nextFrame') {
+			top = 'nextTop'
+			bottom = 'nextBotom'
+		}
+
+		return (
+			thisMob[top] < thatMob[bottom]
+		) && (
+			thatMob[top] < thisMob[bottom]
+		)
+	}
+
+	sharesSpaceWith (thatMob, phase='thisFrame') {
+		const thisMob = this.mob
+
+		return (
+			thisMob.triggersEffects.sharesDomainWith(thatMob, phase)
+		) && (
+			thisMob.triggersEffects.sharesRangeWith(thatMob, phase)
+		)
+	}
 
 	/* Effects */
 
