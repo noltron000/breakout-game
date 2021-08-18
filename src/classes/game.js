@@ -184,11 +184,11 @@ class Game {
 		this.canvas.context.clearRect(0, 0, width, height)
 
 		// TODO: Fix clarity of collisions
-		// // Before redrawing, resolve any collisions.
-		// this.resolveCollisions()
+		// // Use collisions trigges & effects for ball-bouncing, etc.
+		// this.mobileObjects.forEach((mob) => mob.checkCollisionTriggers())
+		// this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
 
-		// Use triggers & effects for wall-bouncing fields, etc.
-		// Apply effect fields last because their rules are most important.
+		// Apply field triggers & effects last because their rules are most important.
 		this.mobileObjects.forEach((mob) => mob.checkFieldTriggers())
 		this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
 

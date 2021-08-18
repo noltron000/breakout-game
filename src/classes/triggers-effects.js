@@ -1,4 +1,4 @@
-class EffectFields {
+class TriggersEffects {
 	constructor (game, mob) {
 		this.game = game
 		this.mob = mob
@@ -7,18 +7,19 @@ class EffectFields {
 		// However, putting it here seperates the code just a little more.
 		// You'll probably only see this used within other class constructors.
 
-		// Use the field triggers to create pending effects.
-		// These will start empty.
+		// Use the field and collision triggers to create pending effects.
+		// These three array variables will start empty.
 		//
-		// The array of fieldTriggers will be manually populated after this is instantiated.
+		// The array of triggers will be manually populated after this is instantiated.
 		// The fieldTriggers watch for true/false statements every frame.
 		// If one is true, it will push a function onto pendingEffects.
 		// After fieldTriggers is checked, the pendingEffects are used and emptied.
 		this.fieldTriggers = []
+		this.collisionTriggers = []
 		this.pendingEffects = []
 	}
 
-	/* Triggers */
+	/* Field Triggers */
 
 	upWallTrigger () {
 		// Get the height of the game board.
@@ -76,6 +77,11 @@ class EffectFields {
 		else return false
 	}
 
+	/* Collision Triggers */
+
+	// TODO
+	// ...
+
 	/* Effects */
 
 	moveUpEffect () {
@@ -92,7 +98,6 @@ class EffectFields {
 	}
 
 	moveDownEffect () {
-		console.log(this)
 		const coordinates = [...this.mob.coordinates]
 
 		// Y Coordinates can't go below zero.
@@ -130,4 +135,4 @@ class EffectFields {
 	}
 }
 
-export default EffectFields
+export default TriggersEffects

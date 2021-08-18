@@ -8,11 +8,11 @@ class RectangleMOB extends MobileObject {
 
 		// FIXME: Gosh this is really gross. Please no.
 		// Define wall-bouncing for rectangle mobs.
-		this.effectFields.fieldTriggers.push(
-			() => {if (this.effectFields.upWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveDownEffect.bind(this.effectFields))},
-			() => {if (this.effectFields.downWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveUpEffect.bind(this.effectFields))},
-			() => {if (this.effectFields.leftWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveRightEffect.bind(this.effectFields))},
-			() => {if (this.effectFields.rightWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveLeftEffect.bind(this.effectFields))},
+		this.triggersEffects.fieldTriggers.push(
+			() => {if (this.triggersEffects.upWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveDownEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.downWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveUpEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.leftWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveRightEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.rightWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveLeftEffect.bind(this.triggersEffects))},
 		)
 	}
 
@@ -89,12 +89,12 @@ class RectangleMOB extends MobileObject {
 	}
 
 	checkFieldTriggers () {
-		this.effectFields.fieldTriggers.forEach((fx) => fx())
+		this.triggersEffects.fieldTriggers.forEach((fx) => fx())
 	}
 
 	resolvePendingEffects () {
-		this.effectFields.pendingEffects.forEach((fx) => fx())
-		this.effectFields.pendingEffects = []
+		this.triggersEffects.pendingEffects.forEach((fx) => fx())
+		this.triggersEffects.pendingEffects = []
 	}
 
 	draw () {

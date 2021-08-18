@@ -1,4 +1,4 @@
-import EffectFields from "./effect-fields.js"
+import TriggersEffects from "./triggers-effects.js"
 
 class MobileObject {
 	#coordinates
@@ -8,8 +8,8 @@ class MobileObject {
 		this.game = game
 
 		// There are no default effects or triggers for a core MobileObject.
-		// Watch my subclasses, they will use effectFields more.
-		this.effectFields = new EffectFields(game, this)
+		// Watch my subclasses, they will use TriggersEffects more.
+		this.triggersEffects = new TriggersEffects(game, this)
 
 		// Notes:
 		// - this.coordinates[0] is position.
