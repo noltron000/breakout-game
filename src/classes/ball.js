@@ -1,6 +1,6 @@
-import RectangleMOB from './rectangle-mob.js'
+import MobileObject from './mobile-object.js'
 
-class Ball extends RectangleMOB {
+class Ball extends MobileObject {
 	constructor (game, {coordinates, dimensions}) {
 		super(game, {coordinates, dimensions, color: 'white'})
 		this.health = 1

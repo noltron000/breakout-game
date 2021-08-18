@@ -1,6 +1,6 @@
-import RectangleMOB from './rectangle-mob.js'
+import MobileObject from './mobile-object.js'
 
-class Paddle extends RectangleMOB {
+class Paddle extends MobileObject {
 	constructor (game, {coordinates, dimensions}) {
 		super(game, {coordinates, dimensions, color: 'black'})
 	}
