@@ -28,7 +28,7 @@ class TriggersEffects {
 		// If the object is taller than the canvas, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (this.mob.nextBotom > canvasHeight) return false
+		if (this.mob.nextBottom > canvasHeight) return false
 
 		// Activate if the MOB would sink into the upper wall.
 		else if (this.mob.nextTop < 0) return true
@@ -45,7 +45,7 @@ class TriggersEffects {
 		if (this.mob.nextTop < 0) return false
 
 		// Activate if the MOB would sink into the lower wall.
-		else if (this.mob.nextBotom > canvasHeight) return true
+		else if (this.mob.nextBottom > canvasHeight) return true
 		else return false
 	}
 
