@@ -5,6 +5,15 @@ class RectangleMOB extends MobileObject {
 		super(game, {coordinates})
 		this.dimensions = dimensions
 		this.color = color
+
+		// FIXME: Gosh this is really gross. Please no.
+		// Define wall-bouncing for rectangle mobs.
+		this.effectFields.fieldTriggers.push(
+			() => {if (this.effectFields.upWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveDownEffect.bind(this.effectFields))},
+			() => {if (this.effectFields.downWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveUpEffect.bind(this.effectFields))},
+			() => {if (this.effectFields.leftWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveRightEffect.bind(this.effectFields))},
+			() => {if (this.effectFields.rightWallTrigger()) this.effectFields.pendingEffects.push(this.effectFields.moveLeftEffect.bind(this.effectFields))},
+		)
 	}
 
 	get length () {
@@ -77,6 +86,15 @@ class RectangleMOB extends MobileObject {
 		) && (
 			this.sharesRangeWith(that, phase)
 		)
+	}
+
+	checkFieldTriggers () {
+		this.effectFields.fieldTriggers.forEach((fx) => fx())
+	}
+
+	resolvePendingEffects () {
+		this.effectFields.pendingEffects.forEach((fx) => fx())
+		this.effectFields.pendingEffects = []
 	}
 
 	draw () {

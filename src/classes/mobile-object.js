@@ -1,8 +1,15 @@
+import EffectFields from "./effect-fields.js"
+
 class MobileObject {
 	#coordinates
 	#nextFrame
 	constructor (game, {coordinates}) {
+		// Define the parent game.
 		this.game = game
+
+		// There are no default effects or triggers for a core MobileObject.
+		// Watch my subclasses, they will use effectFields more.
+		this.effectFields = new EffectFields(game, this)
 
 		// Notes:
 		// - this.coordinates[0] is position.

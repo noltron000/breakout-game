@@ -1,85 +1,86 @@
-import Ball from './ball.js'
+class EffectFields {
+	constructor (game, mob) {
+		this.game = game
+		this.mob = mob
 
-class EffectField {
-	static game = undefined
+		// This class could have been encorporated with the MOB object.
+		// However, putting it here seperates the code just a little more.
+		// You'll probably only see this used within other class constructors.
 
-	static wallEffectFields (mob) {
-		const functions = [
-			(mob) => {if (this.downWallBallTrigger(mob)) this.damageEffect(mob)},
-			(mob) => {if (this.upWallTrigger(mob)) this.moveDownEffect(mob)},
-			(mob) => {if (this.downWallTrigger(mob)) this.moveUpEffect(mob)},
-			(mob) => {if (this.leftWallTrigger(mob)) this.moveRightEffect(mob)},
-			(mob) => {if (this.rightWallTrigger(mob)) this.moveLeftEffect(mob)},
-		]
-
-		functions.forEach(fx => fx(mob))
+		// Use the field triggers to create pending effects.
+		// These will start empty.
+		//
+		// The array of fieldTriggers will be manually populated after this is instantiated.
+		// The fieldTriggers watch for true/false statements every frame.
+		// If one is true, it will push a function onto pendingEffects.
+		// After fieldTriggers is checked, the pendingEffects are used and emptied.
+		this.fieldTriggers = []
+		this.pendingEffects = []
 	}
 
-	static upWallTrigger (mob) {
+	/* Triggers */
+
+	upWallTrigger () {
 		// Get the height of the game board.
 		const canvasHeight = this.game.canvas.element.height
 
 		// If the object is taller than the canvas, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (mob.nextDown > canvasHeight) return false
+		if (this.mob.nextDown > canvasHeight) return false
 
 		// Activate if the MOB would sink into the upper wall.
-		else if (mob.nextUp < 0) return true
+		else if (this.mob.nextUp < 0) return true
 		else return false
 	}
 
-	static downWallTrigger (mob) {
+	downWallTrigger () {
 		// Get the height of the game board.
 		const canvasHeight = this.game.canvas.element.height
 
 		// If the object is taller than the canvas, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (mob.nextUp < 0) return false
+		if (this.mob.nextUp < 0) return false
 
 		// Activate if the MOB would sink into the lower wall.
-		else if (mob.nextDown > canvasHeight) return true
+		else if (this.mob.nextDown > canvasHeight) return true
 		else return false
 	}
 
-	static leftWallTrigger (mob) {
+	leftWallTrigger () {
 		// Get the length of the game board.
 		const canvasLength = this.game.canvas.element.length
 
 		// If the object is wider than the canvas, its possible
 		// 	that the object is both too left and too right.
 		// When this happens, block this effect trigger.
-		if (mob.nextRight > canvasLength) return false
+		if (this.mob.nextRight > canvasLength) return false
 
 		// Activate if the MOB would sink into the left wall.
-		else if (mob.nextLeft < 0) return true
+		else if (this.mob.nextLeft < 0) return true
 		else return false
 	}
 
-	static rightWallTrigger (mob) {
+	rightWallTrigger () {
 		// Get the length of the game board.
 		const canvasLength = this.game.canvas.element.length
 
 		// If the object is wider than the canvas, its possible
 		// 	that the object is both too left and too right.
 		// When this happens, block this effect trigger.
-		if (mob.nextLeft < 0) return false
+		if (this.mob.nextLeft < 0) return false
 
 		// Activate if the MOB would sink into the right wall.
-		else if (mob.nextRight > canvasLength) return true
+		else if (this.mob.nextRight > canvasLength) return true
 		else return false
 	}
 
-	static downWallBallTrigger (mob) {
-		if (mob instanceof Ball
-			&& this.downWallTrigger(mob)) return true
-		else return false
-	}
+	/* Effects */
 
-	static moveUpEffect (mob) {
+	moveUpEffect () {
 		const canvasHeight = this.game.canvas.element.height
-		const coordinates = [...mob.coordinates]
+		const coordinates = [...this.mob.coordinates]
 
 		// Y Coordinates can't exceed the board's height.
 		if (coordinates[0][1] >= canvasHeight) coordinates[0][1] = canvasHeight
@@ -87,11 +88,12 @@ class EffectField {
 		if (coordinates[1][1] > 0) coordinates[1][1] = -coordinates[1][1]
 
 		// Set the MOB's coordinates now.
-		mob.coordinates = coordinates
+		this.mob.coordinates = coordinates
 	}
 
-	static moveDownEffect (mob) {
-		const coordinates = [...mob.coordinates]
+	moveDownEffect () {
+		console.log(this)
+		const coordinates = [...this.mob.coordinates]
 
 		// Y Coordinates can't go below zero.
 		if (coordinates[0][1] <= 0) coordinates[0][1] = 0
@@ -99,12 +101,12 @@ class EffectField {
 		if (coordinates[1][1] < 0) coordinates[1][1] = -coordinates[1][1]
 
 		// Set the MOB's coordinates now.
-		mob.coordinates = coordinates
+		this.mob.coordinates = coordinates
 	}
 
-	static moveLeftEffect (mob) {
+	moveLeftEffect () {
 		const canvasLength = this.game.canvas.element.length
-		const coordinates = [...mob.coordinates]
+		const coordinates = [...this.mob.coordinates]
 
 		// X Coordinates can't exceed the board's length.
 		if (coordinates[0][1] >= canvasLength) coordinates[0][1] = canvasLength
@@ -112,11 +114,11 @@ class EffectField {
 		if (coordinates[1][1] > 0) coordinates[1][1] = -coordinates[1][1]
 
 		// Set the MOB's coordinates now.
-		mob.coordinates = coordinates
+		this.mob.coordinates = coordinates
 	}
 
-	static moveRightEffect (mob) {
-		const coordinates = [...mob.coordinates]
+	moveRightEffect () {
+		const coordinates = [...this.mob.coordinates]
 
 		// X Coordinates can't go below zero.
 		if (coordinates[0][0] <= 0) coordinates[0][0] = 0
@@ -124,12 +126,8 @@ class EffectField {
 		if (coordinates[1][0] < 0) coordinates[1][0] = -coordinates[1][0]
 
 		// Set the MOB's coordinates now.
-		mob.coordinates = coordinates
-	}
-
-	static damageEffect (mob) {
-		mob.health -= 1
+		this.mob.coordinates = coordinates
 	}
 }
 
-export default EffectField
+export default EffectFields

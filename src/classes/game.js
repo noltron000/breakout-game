@@ -1,7 +1,6 @@
 import Ball from './ball.js'
 import Brick from './brick.js'
 import Paddle from './paddle.js'
-import EffectField from './effect-field.js'
 
 class Game {
 	constructor (canvasElement) {
@@ -36,7 +35,7 @@ class Game {
 
 	// Creates one ball.
 	createBall () {
-		return new Ball(this.canvas.context, {
+		return new Ball(this, {
 			coordinates: [[40, 350], [0, -1]],
 			dimensions: [10, 10],
 		})
@@ -49,7 +48,7 @@ class Game {
 
 	// Creates one paddle.
 	createPaddle () {
-		return new Paddle(this.canvas.context, {
+		return new Paddle(this, {
 			coordinates: [[20, this.canvas.element.height - 40]],
 			dimensions: [100, 20],
 		})
@@ -85,7 +84,7 @@ class Game {
 					const yPos = gridMargin + heightIndex * (brickHeight + brickPadding)
 
 					// Create the new brick based on calculated values.
-					return new Brick(this.canvas.context, {
+					return new Brick(this, {
 						coordinates: [[xPos, yPos]],
 						dimensions: [brickLength, brickHeight],
 					})
@@ -188,9 +187,10 @@ class Game {
 		// // Before redrawing, resolve any collisions.
 		// this.resolveCollisions()
 
-		// TODO: Implement effect fields, use triggers & effects
-		// // Apply effect fields last because their rules are most important.
-		// this.mobileObjects.forEach((mob) => EffectField.wallEffectFields(mob))
+		// Use triggers & effects for wall-bouncing fields, etc.
+		// Apply effect fields last because their rules are most important.
+		this.mobileObjects.forEach((mob) => mob.checkFieldTriggers())
+		this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
 
 		// Redraw all the game's assets.
 		this.mobileObjects.forEach((asset) => asset.draw())
