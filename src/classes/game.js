@@ -25,6 +25,13 @@ class Game {
 		console.dir(this)
 	}
 
+	get board () {
+		return {
+			length: this.canvas.element.width,
+			height: this.canvas.element.height,
+		}
+	}
+
 	get mobileObjects () {
 		return [
 			...this.balls,
@@ -49,7 +56,7 @@ class Game {
 	// Creates one paddle.
 	createPaddle () {
 		return new Paddle(this, {
-			coordinates: [[20, this.canvas.element.height - 40]],
+			coordinates: [[20, this.board.height - 40]],
 			dimensions: [100, 20],
 		})
 	}
@@ -70,7 +77,7 @@ class Game {
 	}) {
 		// Compute the brickPadding.
 		const brickPadding = (
-			this.canvas.element.width
+			this.board.length
 			- (gridMargin * 2)
 			- (gridLength * brickLength)
 		) / (gridLength - 1)
@@ -179,9 +186,9 @@ class Game {
 	draw () {
 		// Clear the canvas before redrawing the frame,
 		// 	or else you get ghosted duplicates and afterimages.
-		const width = this.canvas.element.width
-		const height = this.canvas.element.height
-		this.canvas.context.clearRect(0, 0, width, height)
+		const length = this.board.length
+		const height = this.board.height
+		this.canvas.context.clearRect(0, 0, length, height)
 
 		// TODO: Fix clarity of collisions
 		// // Use collisions trigges & effects for ball-bouncing, etc.
