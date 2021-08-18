@@ -87,12 +87,20 @@ class TriggersEffects {
 
 	/* Helper Triggers */
 
-	// This diagram might help...
+	// This diagram might help for sharing a space...
 	// O<=>O   X<->X ❌️
 	// X<->X   O<=>O ❌️
 	// O<=<X>=>O-->X ✔️
 	// X<-<O<=<X>=>O ✔️
 	// O<=<X<->X>=>O ✔️
+	// X<-<O<=>O>->X ✔️
+	//
+	// This one works for engulfing a range...
+	// O<=>O   X<->X ❌️
+	// X<->X   O<=>O ❌️
+	// O<=<X>=>O-->X ❌️
+	// X<-<O<=<X>=>O ❌️
+	// O<=<X<->X>=>O ❌️
 	// X<-<O<=>O>->X ✔️
 	// ...Where X and O are thisMob and thatMob.
 	// Arrows connect between left and right Xs and Os.
@@ -114,6 +122,23 @@ class TriggersEffects {
 		)
 	}
 
+	engulfsDomainOf (thatMob, phase='thisFrame') {
+		const thisMob = this.mob
+
+		let left = 'left'
+		let right = 'right'
+		if (phase === 'nextFrame') {
+			left = 'nextLeft'
+			right = 'nextRight'
+		}
+
+		return (
+			thisMob[left] < thatMob[left]
+		) && (
+			thatMob[right] < thisMob[right]
+		)
+	}
+
 	sharesRangeWith (thatMob, phase='thisFrame') {
 		const thisMob = this.mob
 
@@ -131,6 +156,23 @@ class TriggersEffects {
 		)
 	}
 
+	engulfsRangeOf (thatMob, phase='thisFrame') {
+		const thisMob = this.mob
+
+		let top = 'top'
+		let bottom = 'bottom'
+		if (phase === 'nextFrame') {
+			top = 'nextTop'
+			bottom = 'nextBotom'
+		}
+
+		return (
+			thisMob[top] < thatMob[top]
+		) && (
+			thatMob[bottom] < thisMob[bottom]
+		)
+	}
+
 	sharesSpaceWith (thatMob, phase='thisFrame') {
 		const thisMob = this.mob
 
@@ -138,6 +180,16 @@ class TriggersEffects {
 			thisMob.triggersEffects.sharesDomainWith(thatMob, phase)
 		) && (
 			thisMob.triggersEffects.sharesRangeWith(thatMob, phase)
+		)
+	}
+
+	engulfsSpaceOf (thatMob, phase='thisFrame') {
+		const thisMob = this.mob
+
+		return (
+			thisMob.triggersEffects.engulfsDomainOf(thatMob, phase)
+		) && (
+			thisMob.triggersEffects.engulfsRangeOf(thatMob, phase)
 		)
 	}
 

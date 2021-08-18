@@ -115,7 +115,7 @@ class Game {
 
 		// Determine collisions within all the combinations.
 		for (const [asset1, asset2] of combinations) {
-			if (asset1.sharesSpaceWith(asset2, 'nextFrame')) {
+			if (asset1.triggersEffects.sharesSpaceWith(asset2, 'nextFrame')) {
 				collisions.push([asset1, asset2])
 			}
 		}
