@@ -1,7 +1,9 @@
 class MobileObject {
 	#coordinates
 	#nextFrame
-	constructor (canvasContext, {coordinates}) {
+	constructor (game, {coordinates}) {
+		this.game = game
+
 		// Notes:
 		// - this.coordinates[0] is position.
 		// - this.coordinates[1] is velocity.
@@ -12,16 +14,7 @@ class MobileObject {
 		// This is an n-by-two array (n>0).
 		// For each array in each frame, the array to the right gets added on.
 		// The first item is always the object's position.
-		this.#coordinates = [[0, 0]]
-
-		// Fill it with what coordinates that we have. It could only be positions.
-		coordinates.forEach((pair, index) => {
-			this.#coordinates[index] = pair
-		})
-
-		this.health = null
-		this.canvasContext = canvasContext
-		this.#nextFrame = null
+		this.coordinates = coordinates
 	}
 
 	get coordinates () {
@@ -34,14 +27,6 @@ class MobileObject {
 
 	get yPos () {
 		return this.coordinates[0][1]
-	}
-
-	get nextXPos () {
-		return this.nextFrame[0][0]
-	}
-
-	get nextYPos () {
-		return this.nextFrame[0][1]
 	}
 
 	get left () {
@@ -58,28 +43,6 @@ class MobileObject {
 
 	get down () {
 		return this.yPos
-	}
-
-	get nextLeft () {
-		return this.nextXPos
-	}
-
-	get nextRight () {
-		return this.nextXPos
-	}
-
-	get nextUp () {
-		return this.nextYPos
-	}
-
-	get nextDown () {
-		return this.nextYPos
-	}
-
-
-	set coordinates (givenCoordinates) {
-		this.#coordinates = givenCoordinates
-		this.#nextFrame = null
 	}
 
 	get nextFrame () {
@@ -105,6 +68,35 @@ class MobileObject {
 
 		// Return the calculated next frame.
 		return this.#nextFrame
+	}
+
+	get nextXPos () {
+		return this.nextFrame[0][0]
+	}
+
+	get nextYPos () {
+		return this.nextFrame[0][1]
+	}
+
+	get nextLeft () {
+		return this.nextXPos
+	}
+
+	get nextRight () {
+		return this.nextXPos
+	}
+
+	get nextUp () {
+		return this.nextYPos
+	}
+
+	get nextDown () {
+		return this.nextYPos
+	}
+
+	set coordinates (givenCoordinates) {
+		this.#coordinates = givenCoordinates
+		this.#nextFrame = null
 	}
 }
 

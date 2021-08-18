@@ -1,8 +1,8 @@
 import RectangleMOB from './rectangle-mob.js'
 
 class Paddle extends RectangleMOB {
-	constructor (canvasContext, {coordinates, dimensions}) {
-		super(canvasContext, {coordinates, dimensions, color: 'black'})
+	constructor (game, {coordinates, dimensions}) {
+		super(game, {coordinates, dimensions, color: 'black'})
 	}
 }
 

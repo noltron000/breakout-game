@@ -1,8 +1,8 @@
 import MobileObject from './mobile-object.js'
 
 class RectangleMOB extends MobileObject {
-	constructor (canvasContext, {coordinates, dimensions, color}) {
-		super(canvasContext, {coordinates})
+	constructor (game, {coordinates, dimensions, color}) {
+		super(game, {coordinates})
 		this.dimensions = dimensions
 		this.color = color
 	}
@@ -81,7 +81,7 @@ class RectangleMOB extends MobileObject {
 
 	draw () {
 		this.coordinates = this.nextFrame
-		const context = this.canvasContext
+		const context = this.game.canvas.context
 		const [xPos, yPos] = this.coordinates[0]
 		const [length, height] = this.dimensions
 		context.fillStyle = this.color
