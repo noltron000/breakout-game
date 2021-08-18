@@ -9,10 +9,10 @@ class RectangleMOB extends MobileObject {
 		// FIXME: Gosh this is really gross. Please no.
 		// Define wall-bouncing for rectangle mobs.
 		this.triggersEffects.fieldTriggers.push(
-			() => {if (this.triggersEffects.upWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveDownEffect.bind(this.triggersEffects))},
-			() => {if (this.triggersEffects.downWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveUpEffect.bind(this.triggersEffects))},
-			() => {if (this.triggersEffects.leftWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveRightEffect.bind(this.triggersEffects))},
-			() => {if (this.triggersEffects.rightWallTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveLeftEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.topWallFieldTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveDownEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.bottomWallFieldTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveUpEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.leftWallFieldTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveRightEffect.bind(this.triggersEffects))},
+			() => {if (this.triggersEffects.rightWallFieldTrigger()) this.triggersEffects.pendingEffects.push(this.triggersEffects.moveLeftEffect.bind(this.triggersEffects))},
 		)
 	}
 
@@ -28,7 +28,7 @@ class RectangleMOB extends MobileObject {
 		return this.xPos + this.length
 	}
 
-	get down () {
+	get bottom () {
 		return this.yPos + this.height
 	}
 
@@ -36,7 +36,7 @@ class RectangleMOB extends MobileObject {
 		return this.nextXPos + this.length
 	}
 
-	get nextDown () {
+	get nextBottom () {
 		return this.nextYPos + this.height
 	}
 
@@ -66,17 +66,17 @@ class RectangleMOB extends MobileObject {
 	}
 
 	sharesRangeWith (that, phase='thisFrame') {
-		let up = 'up'
-		let down = 'down'
+		let top = 'top'
+		let bottom = 'bottom'
 		if (phase === 'nextFrame') {
-			up = 'nextUp'
-			down = 'nextDown'
+			top = 'nextTop'
+			bottom = 'nextBotom'
 		}
 
 		return (
-			this[up] < that[down]
+			this[top] < that[bottom]
 		) && (
-			that[up] < this[down]
+			that[top] < this[bottom]
 		)
 	}
 

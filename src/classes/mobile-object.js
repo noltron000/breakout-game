@@ -44,11 +44,11 @@ class MobileObject {
 		return this.xPos
 	}
 
-	get up () {
+	get top () {
 		return this.yPos
 	}
 
-	get down () {
+	get bottom () {
 		return this.yPos
 	}
 
@@ -93,11 +93,11 @@ class MobileObject {
 		return this.nextXPos
 	}
 
-	get nextUp () {
+	get nextTop () {
 		return this.nextYPos
 	}
 
-	get nextDown () {
+	get nextBottom () {
 		return this.nextYPos
 	}
 

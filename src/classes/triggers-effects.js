@@ -21,35 +21,35 @@ class TriggersEffects {
 
 	/* Field Triggers */
 
-	upWallTrigger () {
+	topWallFieldTrigger () {
 		// Get the height of the game board.
 		const canvasHeight = this.game.canvas.element.height
 
 		// If the object is taller than the canvas, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (this.mob.nextDown > canvasHeight) return false
+		if (this.mob.nextBotom > canvasHeight) return false
 
 		// Activate if the MOB would sink into the upper wall.
-		else if (this.mob.nextUp < 0) return true
+		else if (this.mob.nextTop < 0) return true
 		else return false
 	}
 
-	downWallTrigger () {
+	bottomWallFieldTrigger () {
 		// Get the height of the game board.
 		const canvasHeight = this.game.canvas.element.height
 
 		// If the object is taller than the canvas, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (this.mob.nextUp < 0) return false
+		if (this.mob.nextTop < 0) return false
 
 		// Activate if the MOB would sink into the lower wall.
-		else if (this.mob.nextDown > canvasHeight) return true
+		else if (this.mob.nextBotom > canvasHeight) return true
 		else return false
 	}
 
-	leftWallTrigger () {
+	leftWallFieldTrigger () {
 		// Get the length of the game board.
 		const canvasLength = this.game.canvas.element.length
 
@@ -63,7 +63,7 @@ class TriggersEffects {
 		else return false
 	}
 
-	rightWallTrigger () {
+	rightWallFieldTrigger () {
 		// Get the length of the game board.
 		const canvasLength = this.game.canvas.element.length
 
@@ -80,7 +80,10 @@ class TriggersEffects {
 	/* Collision Triggers */
 
 	// TODO
-	// ...
+	// topCollision
+	// bottomCollision
+	// leftCollision
+	// rightCollision
 
 	/* Effects */
 
