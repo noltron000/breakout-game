@@ -1,9 +1,12 @@
+import Transform from "./transform.js"
+
 class MobileObject {
 	#transform
 	#nextTransform
 	constructor (game, transform, {color}) {
 		// Define the parent game.
 		this.game = game
+		this.color = color
 
 		// Use the field and collision triggers to create pending effects.
 		// These three array variables will start empty.
@@ -24,194 +27,136 @@ class MobileObject {
 			() => {if (this.collidesWithRightWall('nextFrame')) this.pendingEffects.push(this.moveLeftEffect.bind(this))},
 		)
 
-		// Notes:
-		// - this.transform[0] is position.
-		// - this.transform[1] is velocity.
-		// - this.transform[2] is acceleration.
+		// ~ NOTES ~
+		//
+		// Transform stores very important geometric data.
+		// - rotations (not implemented/used)
+		// - positions
+		// - dimensions
+		//
+		// For example, these properties can be accessed.
+		// - this.transform.positions[0].x is x position.
+		// - this.transform.positions[1].y is y velocity.
+		// - this.transform.positions[2] is x/y acceleration.
 		//
 		// Transform data is stored in arrays of cartesian coordinates [{x,y}, ...]
 		//
 		// This is an n-by-two matrix (n>0).
 		// For each matrix in each frame, the matrix to the right gets added on.
 		// The first item is always the object's position.
-		this.transform = transform.positions
-		this.dimensions = transform.dimensions
-		this.color = color
-	}
-
-	get length () {
-		return this.dimensions[0].x
-	}
-
-	get height () {
-		return this.dimensions[0].y
+		this.transform = transform
 	}
 
 	get transform () {
 		return this.#transform
 	}
 
-	get xPos () {
-		return this.transform[0].x
-	}
-
-	get yPos () {
-		return this.transform[0].y
-	}
-
-	get left () {
-		return this.xPos
-	}
-
-	get right () {
-		return this.xPos + this.length
-	}
-
-	get top () {
-		return this.yPos
-	}
-
-	get bottom () {
-		return this.yPos + this.height
+	set transform (transform) {
+		this.#transform = new Transform(transform, () => {this.#nextTransform = null})
+		this.#nextTransform = null
 	}
 
 	get nextTransform () {
-		// If the next frame isnt calculated, calculate it.
+		// If the next frame's transform isn't yet calculated, calculate it.
 		if (this.#nextTransform === null) {
-			// Loop through every coordinate pair.
-			this.#nextTransform = this.transform.map((coordinatePair, index) => {
-				// Determine if there is another array after this one.
-				if (index + 1 >= this.transform.length) {
-					return coordinatePair // The final array always remains unchanged.
+			const nextTransform = {}
+
+			// Rotation hasn't been implemented yet to use.
+			// // nextTransform.rotation = []
+
+			// Dimensions should never change yet.
+			nextTransform.dimensions = this.transform.dimensions
+
+			// Positions are where things get interesting.
+			// Loop over every coordinate pair (position, velocity, acceleration, etc).
+			nextTransform.positions = this.transform.positions.map((coordinates, index) => {
+				// Determine if there is another pair of coordinates after this one.
+				if (index + 1 >= this.transform.positions.length) {
+					return coordinates // The final array always remains unchanged.
 				}
 
 				// Add the next object's elements to this object's elements, respectively.
-				const x = this.transform[index].x + this.transform[index + 1].x
-				const y = this.transform[index].y + this.transform[index + 1].y
+				const x = this.transform.positions[index].x + this.transform.positions[index + 1].x
+				const y = this.transform.positions[index].y + this.transform.positions[index + 1].y
 				return {x, y}
 			})
+
+			// Set the new next transform object, allowing a suite of getters.
+			this.#nextTransform = new Transform(nextTransform)
 		}
 
-		// Return the calculated next frame.
+		// Return the next frame's transform.
 		return this.#nextTransform
 	}
 
-	get nextXPos () {
-		return this.nextTransform[0].x
-	}
-
-	get nextYPos () {
-		return this.nextTransform[0].y
-	}
-
-	get nextLeft () {
-		return this.nextXPos
-	}
-
-	get nextRight () {
-		return this.nextXPos + this.length
-	}
-
-	get nextTop () {
-		return this.nextYPos
-	}
-
-	get nextBottom () {
-		return this.nextYPos + this.height
-	}
-
-	set transform (givenCoordinates) {
-		this.#transform = givenCoordinates
-		this.#nextTransform = null
+	transformFrame (phase='thisFrame') {
+		if (phase === 'thisFrame') return this.transform
+		else if (phase === 'nextFrame') return this.nextTransform
 	}
 
 	/* Field Triggers */
 
 	collidesWithTopWall (phase='thisFrame') {
+		const boardHeight = this.game.board.height
 
-		let top = 'top'
-		let bottom = 'bottom'
-		if (phase === 'nextFrame') {
-			top = 'nextTop'
-			bottom = 'nextBottom'
-		}
+		// Default transform is for this frame.
+		const transform = this.transformFrame(phase)
 
-		// Get the height of the game board.
-		const canvasHeight = this.game.board.height
-
-		// If the object is taller than the canvas, its possible
+		// If the object is taller than the board, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (this[bottom] > canvasHeight) return false
+		if (transform.bottomPos > boardHeight) return false
 
 		// Activate if the MOB would sink into the upper wall.
-		else if (this[top] < 0) return true
+		else if (transform.topPos < 0) return true
 		else return false
 	}
 
 	collidesWithBottomWall (phase='thisFrame') {
+		const boardHeight = this.game.board.height
 
-		let top = 'top'
-		let bottom = 'bottom'
-		if (phase === 'nextFrame') {
-			top = 'nextTop'
-			bottom = 'nextBottom'
-		}
+		// Default transform is for this frame.
+		const transform = this.transformFrame(phase)
 
-		// Get the height of the game board.
-		const canvasHeight = this.game.board.height
-
-		// If the object is taller than the canvas, its possible
+		// If the object is taller than the board, its possible
 		// 	that the object is both too high and too low.
 		// When this happens, block this effect trigger.
-		if (this[top] < 0) return false
+		if (transform.topPos < 0) return false
 
 		// Activate if the MOB would sink into the lower wall.
-		else if (this[bottom] > canvasHeight) return true
+		else if (transform.bottomPos > boardHeight) return true
 		else return false
 	}
 
 	collidesWithLeftWall (phase='thisFrame') {
+		const boardWidth = this.game.board.width
 
-		let left = 'left'
-		let right = 'right'
-		if (phase === 'nextFrame') {
-			left = 'nextLeft'
-			right = 'nextRight'
-		}
+		// Default transform is for this frame.
+		const transform = this.transformFrame(phase)
 
-		// Get the length of the game board.
-		const canvasLength = this.game.board.length
-
-		// If the object is wider than the canvas, its possible
+		// If the object is wider than the board, its possible
 		// 	that the object is both too left and too right.
 		// When this happens, block this effect trigger.
-		if (this[right] > canvasLength) return false
+		if (transform.rightPos > boardWidth) return false
 
 		// Activate if the MOB would sink into the left wall.
-		else if (this[left] < 0) return true
+		else if (transform.leftPos < 0) return true
 		else return false
 	}
 
 	collidesWithRightWall (phase='thisFrame') {
+		const boardWidth = this.game.board.width
 
-		let left = 'left'
-		let right = 'right'
-		if (phase === 'nextFrame') {
-			left = 'nextLeft'
-			right = 'nextRight'
-		}
+		// Default transform is for this frame.
+		const transform = this.transformFrame(phase)
 
-		// Get the length of the game board.
-		const canvasLength = this.game.board.length
-
-		// If the object is wider than the canvas, its possible
+		// If the object is wider than the board, its possible
 		// 	that the object is both too left and too right.
 		// When this happens, block this effect trigger.
-		if (this[left] < 0) return false
+		if (transform.leftPos < 0) return false
 
 		// Activate if the MOB would sink into the right wall.
-		else if (this[right] > canvasLength) return true
+		else if (transform.rightPos > boardWidth) return true
 		else return false
 	}
 
@@ -244,71 +189,50 @@ class MobileObject {
 	// Arrows connect between left and right Xs and Os.
 
 	sharesDomainWith (that, phase='thisFrame') {
-
-		let left = 'left'
-		let right = 'right'
-		if (phase === 'nextFrame') {
-			left = 'nextLeft'
-			right = 'nextRight'
-		}
-
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
 		return (
-			this[left] < that[right]
+			thisT.leftPos < thatT.rightPos
 		) && (
-			that[left] < this[right]
+			thatT.leftPos < thisT.rightPos
 		)
 	}
 
 	engulfsDomainOf (that, phase='thisFrame') {
-
-		let left = 'left'
-		let right = 'right'
-		if (phase === 'nextFrame') {
-			left = 'nextLeft'
-			right = 'nextRight'
-		}
-
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
 		return (
-			this[left] < that[left]
+			thisT.leftPos < thatT.leftPos
 		) && (
-			that[right] < this[right]
+			thatT.rightPos < thisT.rightPos
 		)
 	}
 
 	sharesRangeWith (that, phase='thisFrame') {
-
-		let top = 'top'
-		let bottom = 'bottom'
-		if (phase === 'nextFrame') {
-			top = 'nextTop'
-			bottom = 'nextBottom'
-		}
-
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
 		return (
-			this[top] < that[bottom]
+			thisT.topPos < thatT.bottomPos
 		) && (
-			that[top] < this[bottom]
+			thatT.topPos < thisT.bottomPos
 		)
 	}
 
 	engulfsRangeOf (that, phase='thisFrame') {
-
-		let top = 'top'
-		let bottom = 'bottom'
-		if (phase === 'nextFrame') {
-			top = 'nextTop'
-			bottom = 'nextBottom'
-		}
-
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
 		return (
-			this[top] < that[top]
+			thisT.topPos < thatT.topPos
 		) && (
-			that[bottom] < this[bottom]
+			thatT.bottomPos < thisT.bottomPos
 		)
 	}
 
 	sharesSpaceWith (that, phase='thisFrame') {
-
 		return (
 			this.sharesDomainWith(that, phase)
 		) && (
@@ -317,7 +241,6 @@ class MobileObject {
 	}
 
 	engulfsSpaceOf (that, phase='thisFrame') {
-
 		return (
 			this.engulfsDomainOf(that, phase)
 		) && (
@@ -328,53 +251,33 @@ class MobileObject {
 	/* Effects */
 
 	moveUpEffect () {
-		const transform = this.transform
-		const canvasHeight = this.game.board.height
-
+		const boardHeight = this.game.board.height
 		// Y Coordinates can't exceed the board's height.
-		if (transform[0].y >= canvasHeight) transform[0].y = canvasHeight
+		if (this.transform.yPos >= boardHeight) this.transform.yPos = boardHeight
 		// Y Velocity must be negative.
-		if (transform[1].y > 0) transform[1].y = -transform[1].y
-
-		// Set the MOB's transform now.
-		this.transform = transform
+		if (this.transform.yVel > 0) this.transform.yVel = -this.transform.yVel
 	}
 
 	moveDownEffect () {
-		const transform = this.transform
-
 		// Y Coordinates can't go below zero.
-		if (transform[0].y <= 0) transform[0].y = 0
+		if (this.transform.yPos <= 0) this.transform.yPos = 0
 		// Y Velocity must be positive.
-		if (transform[1].y < 0) transform[1].y = -transform[1].y
-
-		// Set the MOB's transform now.
-		this.transform = transform
+		if (this.transform.yVel < 0) this.transform.yVel = -this.transform.yVel
 	}
 
 	moveLeftEffect () {
-		const canvasLength = this.game.board.length
-		const transform = this.transform
-
-		// X Coordinates can't exceed the board's length.
-		if (transform[0].x >= canvasLength) transform[0].x = canvasLength
+		const boardWidth = this.game.board.width
+		// X Coordinates can't exceed the board's width.
+		if (this.transform.xPos >= boardWidth) this.transform.xPos = boardWidth
 		// X Velocity must be negative.
-		if (transform[1].x > 0) transform[1].x = -transform[1].x
-
-		// Set the MOB's coordinates now.
-		this.transform = transform
+		if (this.transform.xVel > 0) this.transform.xVel = -this.transform.xVel
 	}
 
 	moveRightEffect () {
-		const transform = this.transform
-
 		// X Coordinates can't go below zero.
-		if (transform[0].x <= 0) transform[0].x = 0
+		if (this.transform.xPos <= 0) this.transform.xPos = 0
 		// X Velocity must be positive.
-		if (transform[1].x < 0) transform[1].x = -transform[1].x
-
-		// Set the MOB's coordinates now.
-		this.transform = transform
+		if (this.transform.xVel < 0) this.transform.xVel = -this.transform.xVel
 	}
 
 	checkFieldTriggers () {
@@ -389,11 +292,10 @@ class MobileObject {
 	draw () {
 		this.transform = this.nextTransform
 		const context = this.game.canvas.context
-		const {x: xPos, y: yPos} = this.transform[0]
-		const {x: length, y: height} = this.dimensions[0]
+		const {xPos, yPos, width, height} = this.transform
 		context.fillStyle = this.color
 		context.beginPath();
-		context.rect(xPos, yPos, length, height);
+		context.rect(xPos, yPos, width, height);
 		context.fill();
 		context.closePath();
 	}
