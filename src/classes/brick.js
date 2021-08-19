@@ -5,6 +5,11 @@ class Brick extends MobileObject {
 		super(game, transform, {color: 'black'})
 		this.health = 1
 	}
+
+	damageBrickEffect () {
+		this.health -= 1
+		this.game.destroyAsset(this)
+	}
 }
 
 export default Brick

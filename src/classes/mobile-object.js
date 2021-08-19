@@ -21,10 +21,17 @@ class MobileObject {
 		// FIXME: Gosh this is really gross. Please no.
 		// Define wall-bouncing for rectangle mobs.
 		this.fieldTriggers.push(
-			() => {if (this.collidesWithTopWall('nextFrame')) this.pendingEffects.push(this.moveDownEffect.bind(this))},
-			() => {if (this.collidesWithBottomWall('nextFrame')) this.pendingEffects.push(this.moveUpEffect.bind(this))},
-			() => {if (this.collidesWithLeftWall('nextFrame')) this.pendingEffects.push(this.moveRightEffect.bind(this))},
-			() => {if (this.collidesWithRightWall('nextFrame')) this.pendingEffects.push(this.moveLeftEffect.bind(this))},
+			() => {if (this.collidesWithTopWall('nextFrame')) this.pendingEffects.push(this.forceDownEffect.bind(this))},
+			() => {if (this.collidesWithBottomWall('nextFrame')) this.pendingEffects.push(this.forceUpEffect.bind(this))},
+			() => {if (this.collidesWithLeftWall('nextFrame')) this.pendingEffects.push(this.forceRightEffect.bind(this))},
+			() => {if (this.collidesWithRightWall('nextFrame')) this.pendingEffects.push(this.forceLeftEffect.bind(this))},
+		)
+
+		this.collisionTriggers.push(
+			(that) => {if (this.topCollidesWith(that, 'nextFrame')) this.pendingEffects.push(this.bounceDownEffect.bind(this))},
+			(that) => {if (this.bottomCollidesWith(that, 'nextFrame')) this.pendingEffects.push(this.bounceUpEffect.bind(this))},
+			(that) => {if (this.leftCollidesWith(that, 'nextFrame')) this.pendingEffects.push(this.bounceRightEffect.bind(this))},
+			(that) => {if (this.rightCollidesWith(that, 'nextFrame')) this.pendingEffects.push(this.bounceLeftEffect.bind(this))},
 		)
 
 		// ~ NOTES ~
@@ -162,11 +169,66 @@ class MobileObject {
 
 	/* Collision Triggers */
 
-	// TODO
-	// topCollisionWith
-	// bottomCollisionWith
-	// leftCollisionWith
-	// rightCollisionWith
+	topCollidesWith (that, phase='thisFrame') {
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
+
+		// top needs to be inside, but bottom not.
+		return (
+			this.sharesDomainWith(that, phase)
+		) && (
+			thisT.topPos < thatT.bottomPos
+		) && (
+			thisT.bottomPos > thatT.bottomPos
+		)
+	}
+
+	bottomCollidesWith (that, phase='thisFrame') {
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
+
+		// top needs to be inside, but bottom not.
+		return (
+			this.sharesDomainWith(that, phase)
+		) && (
+			thisT.bottomPos > thatT.topPos
+		) && (
+			thisT.topPos < thatT.topPos
+		)
+	}
+
+	leftCollidesWith (that, phase='thisFrame') {
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
+
+		// top needs to be inside, but bottom not.
+		return (
+			this.sharesDomainWith(that, phase)
+		) && (
+			thisT.leftPos < thatT.rightPos
+		) && (
+			thisT.rightPos > thatT.rightPos
+		)
+	}
+
+	rightCollidesWith (that, phase='thisFrame') {
+		// Default transform is for this frame.
+		const thisT = this.transformFrame(phase)
+		const thatT = that.transformFrame(phase)
+
+		// top needs to be inside, but bottom not.
+		return (
+			this.sharesDomainWith(that, phase)
+		) && (
+			thisT.rightPos > thatT.leftPos
+		) && (
+			thisT.leftPos < thatT.leftPos
+		)
+	}
+
 
 	/* Helper Triggers */
 
@@ -250,38 +312,66 @@ class MobileObject {
 
 	/* Effects */
 
-	moveUpEffect () {
-		const boardHeight = this.game.board.height
-		// Y Coordinates can't exceed the board's height.
-		if (this.transform.yPos >= boardHeight) this.transform.yPos = boardHeight
+	bounceUpEffect () {
 		// Y Velocity must be negative.
-		if (this.transform.yVel > 0) this.transform.yVel = -this.transform.yVel
+		if (this.transform.positions.length > 1 && this.transform.yVel > 0)
+			this.transform.yVel = -this.transform.yVel
 	}
 
-	moveDownEffect () {
+	bounceDownEffect () {
+		// Y Velocity must be positive.
+		if (this.transform.positions.length > 1 && this.transform.yVel < 0)
+			this.transform.yVel = -this.transform.yVel
+	}
+
+	bounceLeftEffect () {
+		// X Velocity must be negative.
+		if (this.transform.positions.length > 1 && this.transform.xVel > 0)
+			this.transform.xVel = -this.transform.xVel
+	}
+
+	bounceRightEffect() {
+		// X Velocity must be positive.
+		if (this.transform.positions.length > 1 && this.transform.xVel < 0)
+			this.transform.xVel = -this.transform.xVel
+	}
+
+	forceUpEffect () {
+		this.bounceUpEffect()
+
+		// Y Coordinates can't exceed the board's height.
+		const boardHeight = this.game.board.height
+		if (this.transform.yPos >= boardHeight) this.transform.yPos = boardHeight
+	}
+
+	forceDownEffect () {
+		this.bounceDownEffect()
+
 		// Y Coordinates can't go below zero.
 		if (this.transform.yPos <= 0) this.transform.yPos = 0
-		// Y Velocity must be positive.
-		if (this.transform.yVel < 0) this.transform.yVel = -this.transform.yVel
 	}
 
-	moveLeftEffect () {
+	forceLeftEffect () {
+		this.bounceLeftEffect()
 		const boardWidth = this.game.board.width
+
 		// X Coordinates can't exceed the board's width.
 		if (this.transform.xPos >= boardWidth) this.transform.xPos = boardWidth
-		// X Velocity must be negative.
-		if (this.transform.xVel > 0) this.transform.xVel = -this.transform.xVel
 	}
 
-	moveRightEffect () {
+	forceRightEffect () {
+		this.bounceRightEffect()
+
 		// X Coordinates can't go below zero.
 		if (this.transform.xPos <= 0) this.transform.xPos = 0
-		// X Velocity must be positive.
-		if (this.transform.xVel < 0) this.transform.xVel = -this.transform.xVel
 	}
 
 	checkFieldTriggers () {
 		this.fieldTriggers.forEach((fx) => fx())
+	}
+
+	checkCollisionTriggers (that) {
+		this.collisionTriggers.forEach((fx) => fx(that))
 	}
 
 	resolvePendingEffects () {

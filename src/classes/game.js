@@ -27,7 +27,7 @@ class Game {
 
 	get board () {
 		return {
-			length: this.canvas.element.width,
+			width: this.canvas.element.width,
 			height: this.canvas.element.height,
 		}
 	}
@@ -47,7 +47,7 @@ class Game {
 				x: 40,
 				y: 350,
 			}, {
-				x: 0,
+				x: -1,
 				y: -1,
 			}],
 			dimensions: [{
@@ -78,31 +78,31 @@ class Game {
 
 	// Create an array of bricks using these parameters.
 	createBrickArray ({
-		gridLength,
+		gridWidth,
 		gridHeight,
 		gridMargin,
-		brickLength,
+		brickWidth,
 		brickHeight,
 	} = {
-		gridLength: 6,
+		gridWidth: 6,
 		gridHeight: 5,
 		gridMargin: 20,
-		brickLength: 65,
+		brickWidth: 65,
 		brickHeight: 30,
 	}) {
 		// Compute the brickPadding.
 		const brickPadding = (
-			this.board.length
+			this.board.width
 			- (gridMargin * 2)
-			- (gridLength * brickLength)
-		) / (gridLength - 1)
+			- (gridWidth * brickWidth)
+		) / (gridWidth - 1)
 
-		// Map bricks over a grid of the grid length * grid height.
-		const bricks = [...new Array(gridLength)].map(
-			(_, lengthIndex) => [...new Array(gridHeight)].map(
+		// Map bricks over a grid of the grid width * grid height.
+		const bricks = [...new Array(gridWidth)].map(
+			(_, widthIndex) => [...new Array(gridHeight)].map(
 				(_, heightIndex) => {
 					// Calculate the x/y coordinates using the map indexes.
-					const xPos = gridMargin + lengthIndex * (brickLength + brickPadding)
+					const xPos = gridMargin + widthIndex * (brickWidth + brickPadding)
 					const yPos = gridMargin + heightIndex * (brickHeight + brickPadding)
 
 					// Create the new brick based on calculated values.
@@ -112,7 +112,7 @@ class Game {
 							y: yPos,
 						}],
 						dimensions: [{
-							x: brickLength,
+							x: brickWidth,
 							y: brickHeight
 						}],
 					})
@@ -124,9 +124,20 @@ class Game {
 		return bricks.flat()
 	}
 
-	resolveCollisions () {
-		/* STEP 1: combinations */
-		const assets = this.assets
+	clearBoard () {
+		this.balls = []
+		this.bricks = []
+		this.paddles = []
+	}
+
+	destroyAsset (asset) {
+		this.balls = this.balls.filter(ball => ball !== asset)
+		this.bricks = this.bricks.filter(brick => brick !== asset)
+		this.paddles = this.paddles.filter(ball => ball !== asset)
+	}
+
+	get combinations () {
+		const assets = this.mobileObjects
 		const combinations = []
 
 		// Get every unique combination of the assets.
@@ -138,87 +149,54 @@ class Game {
 			}
 		}
 
-		/* STEP 2: collisions */
+		return combinations
+	}
+
+	get collisions () {
+		const assets = this.mobileObjects
+		const combinations = this.combinations
 		const collisions = []
 
 		// Determine collisions within all the combinations.
 		for (const [asset1, asset2] of combinations) {
-			if (asset1.triggersEffects.sharesSpaceWith(asset2, 'nextFrame')) {
+			if (asset1.sharesSpaceWith(asset2, 'nextFrame')) {
 				collisions.push([asset1, asset2])
 			}
 		}
 
-		/* STEP 3: resolve bounces */
-		const bouncePairs = collisions.map(([asset1, asset2]) => {
-			const bouncePair = new Map()
-			;[asset1, asset2].forEach((asset) => {
-				// map each asset in the pair to whether it bounces in the x/y plane.
-				bouncePair.set(asset, [false, false])
-			})
-			return bouncePair
+		return collisions
+	}
+
+	resolveCollisions () {
+		this.collisions.forEach((pair) => {
+			pair[0].checkCollisionTriggers(pair[1])
+			pair[1].checkCollisionTriggers(pair[0])
 		})
+		this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
+	}
 
-		bouncePairs.forEach((bouncePair) => {
-			const [asset1, asset2] = bouncePair.keys()
-			const bounceAxis = [
-				!asset1.sharesDomainWith(asset2),
-				!asset1.sharesRangeWith(asset2),
-			]
-			;[asset1, asset2].forEach((asset) => {
-				bouncePair.set(asset, bounceAxis)
-			})
-		})
+	resolveFieldEffects () {
+		this.mobileObjects.forEach((mob) => mob.checkFieldTriggers())
+		this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
+	}
 
-		const bounces = bouncePairs.reduce((bounces, bouncePair) => {
-			for (const asset of bouncePair.keys()) {
-				const bounceAxis1 = bouncePair.get(asset)
-				if (bounces.has(asset)) {
-					const bounceAxis2 = bounces.get(asset)
-					const newBounceAxis = [
-						bounceAxis1[0] || bounceAxis2[0],
-						bounceAxis1[1] || bounceAxis2[1],
-					]
-					bounces.set(asset, newBounceAxis)
-				}
-				else {
-					bounces.set(asset, bounceAxis1)
-				}
-			}
-			return bounces
-		}, new Map())
-
-		for (const [asset, bounce] of bounces.entries()) {
-			const newCoords = [
-				asset.coordinates[0],
-				...asset.coordinates.slice(1).map((pair) => pair.map((magnitude, axis) => {
-					if (bounce[axis]) {
-						return magnitude
-					}
-					else {
-						return -magnitude
-					}
-				}))
-			]
-			console.log('newCoords', newCoords)
-			asset.coordinates = newCoords
-		}
+	resolveGameEffects () {
+		// TODO
 	}
 
 	draw () {
 		// Clear the canvas before redrawing the frame,
 		// 	or else you get ghosted duplicates and afterimages.
-		const length = this.board.length
+		const width = this.board.width
 		const height = this.board.height
-		this.canvas.context.clearRect(0, 0, length, height)
+		this.canvas.context.clearRect(0, 0, width, height)
 
-		// TODO: Fix clarity of collisions
-		// // Use collisions trigges & effects for ball-bouncing, etc.
-		// this.mobileObjects.forEach((mob) => mob.checkCollisionTriggers())
-		// this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
-
-		// Apply field triggers & effects last because their rules are most important.
-		this.mobileObjects.forEach((mob) => mob.checkFieldTriggers())
-		this.mobileObjects.forEach((mob) => mob.resolvePendingEffects())
+		// Use collisions trigges & effects for ball-bouncing, etc.
+		this.resolveCollisions()
+		// Apply field triggers & effects next because their rules override collisions.
+		this.resolveFieldEffects()
+		// Finally, the game status rules over all.
+		this.resolveGameEffects()
 
 		// Redraw all the game's assets.
 		this.mobileObjects.forEach((asset) => asset.draw())

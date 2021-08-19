@@ -1,10 +1,6 @@
 class Transform {
-	constructor (transform, cleanupCallback) {
-		this.data = transform ?? {
-			positions: [[undefined, undefined]],
-			dimensions: [[undefined, undefined]]
-		}
-		this.cleanup = cleanupCallback ?? (() => {})
+	constructor (transform) {
+		this.data = transform
 	}
 
 	/* TRANSFORM ROTATIONS - GETTERS & SETTERS */
@@ -21,7 +17,6 @@ class Transform {
 	}
 	set dimensions (dimesions) {
 		this.data.dimensions = dimensions
-		this.cleanup()
 	}
 
 	get width () {
@@ -29,7 +24,6 @@ class Transform {
 	}
 	set width (width) {
 		this.dimensions[0].x = width
-		this.cleanup()
 	}
 
 	get height () {
@@ -37,7 +31,6 @@ class Transform {
 	}
 	set height (height) {
 		this.dimensions[0].y = height
-		this.cleanup()
 	}
 
 	// It's unlikely we'll be working with dimension deltas.
@@ -51,7 +44,6 @@ class Transform {
 	}
 	set positions (positions) {
 		this.data.positions = positions
-		this.cleanup()
 	}
 
 	get position () {
@@ -59,7 +51,6 @@ class Transform {
 	}
 	set position (position) {
 		this.positions[0] = position
-		this.cleanup()
 	}
 
 	get velocity () {
@@ -67,7 +58,6 @@ class Transform {
 	}
 	set velocity (velocity) {
 		this.positions[1] = velocity
-		this.cleanup()
 	}
 
 	get acceleration () {
@@ -75,7 +65,6 @@ class Transform {
 	}
 	set acceleration (acceleration) {
 		this.positions[2] = acceleration
-		this.cleanup()
 	}
 
 	get xPos () {
@@ -83,7 +72,6 @@ class Transform {
 	}
 	set xPos (xPos) {
 		this.position.x = xPos
-		this.cleanup()
 	}
 
 	get yPos () {
@@ -91,7 +79,6 @@ class Transform {
 	}
 	set yPos (yPos) {
 		this.position.y = yPos
-		this.cleanup()
 	}
 
 	get xVel () {
@@ -99,7 +86,6 @@ class Transform {
 	}
 	set xVel (xVel) {
 		this.velocity.x = xVel
-		this.cleanup()
 	}
 
 	get yVel () {
@@ -107,7 +93,6 @@ class Transform {
 	}
 	set yVel (yVel) {
 		this.velocity.y = yVel
-		this.cleanup()
 	}
 
 	get xAcc () {
@@ -115,7 +100,6 @@ class Transform {
 	}
 	set xAcc (xAcc) {
 		this.acceleration.x = xAcc
-		this.cleanup()
 	}
 
 	get yAcc () {
@@ -123,7 +107,6 @@ class Transform {
 	}
 	set yAcc (yAcc) {
 		this.acceleration.y = yAcc
-		this.cleanup()
 	}
 
 	get leftPos () {
