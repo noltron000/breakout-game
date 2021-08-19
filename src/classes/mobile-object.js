@@ -1,7 +1,7 @@
 class MobileObject {
-	#coordinates
-	#nextFrame
-	constructor (game, {coordinates, dimensions, color}) {
+	#transform
+	#nextTransform
+	constructor (game, transform, {color}) {
 		// Define the parent game.
 		this.game = game
 
@@ -25,38 +25,38 @@ class MobileObject {
 		)
 
 		// Notes:
-		// - this.coordinates[0] is position.
-		// - this.coordinates[1] is velocity.
-		// - this.coordinates[2] is acceleration.
+		// - this.transform[0] is position.
+		// - this.transform[1] is velocity.
+		// - this.transform[2] is acceleration.
 		//
-		// Coordinates is stored in cartesian coordinates. [x,y]
+		// Transform data is stored in arrays of cartesian coordinates [{x,y}, ...]
 		//
-		// This is an n-by-two array (n>0).
-		// For each array in each frame, the array to the right gets added on.
+		// This is an n-by-two matrix (n>0).
+		// For each matrix in each frame, the matrix to the right gets added on.
 		// The first item is always the object's position.
-		this.coordinates = coordinates
-		this.dimensions = dimensions
+		this.transform = transform.positions
+		this.dimensions = transform.dimensions
 		this.color = color
 	}
 
 	get length () {
-		return this.dimensions[0]
+		return this.dimensions[0].x
 	}
 
 	get height () {
-		return this.dimensions[1]
+		return this.dimensions[0].y
 	}
 
-	get coordinates () {
-		return this.#coordinates
+	get transform () {
+		return this.#transform
 	}
 
 	get xPos () {
-		return this.coordinates[0][0]
+		return this.transform[0].x
 	}
 
 	get yPos () {
-		return this.coordinates[0][1]
+		return this.transform[0].y
 	}
 
 	get left () {
@@ -75,37 +75,33 @@ class MobileObject {
 		return this.yPos + this.height
 	}
 
-	get nextFrame () {
+	get nextTransform () {
 		// If the next frame isnt calculated, calculate it.
-		if (this.#nextFrame === null) {
+		if (this.#nextTransform === null) {
 			// Loop through every coordinate pair.
-			this.#nextFrame = this.coordinates.map((coordinatePair, index) => {
+			this.#nextTransform = this.transform.map((coordinatePair, index) => {
 				// Determine if there is another array after this one.
-				if (index + 1 >= this.coordinates.length) {
+				if (index + 1 >= this.transform.length) {
 					return coordinatePair // The final array always remains unchanged.
 				}
 
-				// Add the next array's elements to this array's elements, respectively.
-				const nextCoordinatePair = this.coordinates[index + 1]
-				return coordinatePair.map((coordinate, pairIndex) => {
-					// Note that the coordinatePair elements are just x/y coordinate pairs.
-					// We didn't need a map per say, its not like we'll ever have x/y/z coords.
-					const nextCoordinate = nextCoordinatePair[pairIndex]
-					return coordinate + nextCoordinate
-				})
+				// Add the next object's elements to this object's elements, respectively.
+				const x = this.transform[index].x + this.transform[index + 1].x
+				const y = this.transform[index].y + this.transform[index + 1].y
+				return {x, y}
 			})
 		}
 
 		// Return the calculated next frame.
-		return this.#nextFrame
+		return this.#nextTransform
 	}
 
 	get nextXPos () {
-		return this.nextFrame[0][0]
+		return this.nextTransform[0].x
 	}
 
 	get nextYPos () {
-		return this.nextFrame[0][1]
+		return this.nextTransform[0].y
 	}
 
 	get nextLeft () {
@@ -124,9 +120,9 @@ class MobileObject {
 		return this.nextYPos + this.height
 	}
 
-	set coordinates (givenCoordinates) {
-		this.#coordinates = givenCoordinates
-		this.#nextFrame = null
+	set transform (givenCoordinates) {
+		this.#transform = givenCoordinates
+		this.#nextTransform = null
 	}
 
 	/* Field Triggers */
@@ -137,7 +133,7 @@ class MobileObject {
 		let bottom = 'bottom'
 		if (phase === 'nextFrame') {
 			top = 'nextTop'
-			bottom = 'nextBotom'
+			bottom = 'nextBottom'
 		}
 
 		// Get the height of the game board.
@@ -159,7 +155,7 @@ class MobileObject {
 		let bottom = 'bottom'
 		if (phase === 'nextFrame') {
 			top = 'nextTop'
-			bottom = 'nextBotom'
+			bottom = 'nextBottom'
 		}
 
 		// Get the height of the game board.
@@ -285,7 +281,7 @@ class MobileObject {
 		let bottom = 'bottom'
 		if (phase === 'nextFrame') {
 			top = 'nextTop'
-			bottom = 'nextBotom'
+			bottom = 'nextBottom'
 		}
 
 		return (
@@ -301,7 +297,7 @@ class MobileObject {
 		let bottom = 'bottom'
 		if (phase === 'nextFrame') {
 			top = 'nextTop'
-			bottom = 'nextBotom'
+			bottom = 'nextBottom'
 		}
 
 		return (
@@ -332,53 +328,53 @@ class MobileObject {
 	/* Effects */
 
 	moveUpEffect () {
+		const transform = this.transform
 		const canvasHeight = this.game.board.height
-		const coordinates = [...this.coordinates]
 
 		// Y Coordinates can't exceed the board's height.
-		if (coordinates[0][1] >= canvasHeight) coordinates[0][1] = canvasHeight
+		if (transform[0].y >= canvasHeight) transform[0].y = canvasHeight
 		// Y Velocity must be negative.
-		if (coordinates[1][1] > 0) coordinates[1][1] = -coordinates[1][1]
+		if (transform[1].y > 0) transform[1].y = -transform[1].y
 
-		// Set the MOB's coordinates now.
-		this.coordinates = coordinates
+		// Set the MOB's transform now.
+		this.transform = transform
 	}
 
 	moveDownEffect () {
-		const coordinates = [...this.coordinates]
+		const transform = this.transform
 
 		// Y Coordinates can't go below zero.
-		if (coordinates[0][1] <= 0) coordinates[0][1] = 0
+		if (transform[0].y <= 0) transform[0].y = 0
 		// Y Velocity must be positive.
-		if (coordinates[1][1] < 0) coordinates[1][1] = -coordinates[1][1]
+		if (transform[1].y < 0) transform[1].y = -transform[1].y
 
-		// Set the MOB's coordinates now.
-		this.coordinates = coordinates
+		// Set the MOB's transform now.
+		this.transform = transform
 	}
 
 	moveLeftEffect () {
 		const canvasLength = this.game.board.length
-		const coordinates = [...this.coordinates]
+		const transform = this.transform
 
 		// X Coordinates can't exceed the board's length.
-		if (coordinates[0][1] >= canvasLength) coordinates[0][1] = canvasLength
+		if (transform[0].x >= canvasLength) transform[0].x = canvasLength
 		// X Velocity must be negative.
-		if (coordinates[1][1] > 0) coordinates[1][1] = -coordinates[1][1]
+		if (transform[1].x > 0) transform[1].x = -transform[1].x
 
 		// Set the MOB's coordinates now.
-		this.coordinates = coordinates
+		this.transform = transform
 	}
 
 	moveRightEffect () {
-		const coordinates = [...this.coordinates]
+		const transform = this.transform
 
 		// X Coordinates can't go below zero.
-		if (coordinates[0][0] <= 0) coordinates[0][0] = 0
+		if (transform[0].x <= 0) transform[0].x = 0
 		// X Velocity must be positive.
-		if (coordinates[1][0] < 0) coordinates[1][0] = -coordinates[1][0]
+		if (transform[1].x < 0) transform[1].x = -transform[1].x
 
 		// Set the MOB's coordinates now.
-		this.coordinates = coordinates
+		this.transform = transform
 	}
 
 	checkFieldTriggers () {
@@ -391,10 +387,10 @@ class MobileObject {
 	}
 
 	draw () {
-		this.coordinates = this.nextFrame
+		this.transform = this.nextTransform
 		const context = this.game.canvas.context
-		const [xPos, yPos] = this.coordinates[0]
-		const [length, height] = this.dimensions
+		const {x: xPos, y: yPos} = this.transform[0]
+		const {x: length, y: height} = this.dimensions[0]
 		context.fillStyle = this.color
 		context.beginPath();
 		context.rect(xPos, yPos, length, height);
