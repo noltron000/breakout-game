@@ -15,14 +15,10 @@ class Game {
 			lives: 3,
 			score: 0,
 			pause: false,
+			status: 'playing'
 		}
 
-		// Prepare mobile objects
-		this.balls = [this.createBall()]
-		this.bricks = this.createBrickArray()
-		this.paddles = [this.createPaddle()]
-
-		console.dir(this)
+		this.resetBoard()
 	}
 
 	get board () {
@@ -128,6 +124,17 @@ class Game {
 		this.balls = []
 		this.bricks = []
 		this.paddles = []
+		this.state.status = 'menu'
+	}
+
+	resetBoard () {
+		this.clearBoard()
+		this.state.status = 'playing'
+
+		// Prepare mobile objects
+		this.balls = [this.createBall()]
+		this.bricks = this.createBrickArray()
+		this.paddles = [this.createPaddle()]
 	}
 
 	destroyAsset (asset) {
@@ -181,7 +188,17 @@ class Game {
 	}
 
 	resolveGameEffects () {
-		// TODO
+		if (this.bricks.length <= 0 && this.state !== 'win') {
+			this.state.status = 'win'
+			alert ("YOU WIN!")
+			this.resetBoard()
+		}
+
+		if (this.balls.length <= 0 && this.state !== 'lose') {
+			this.state.status = 'lose'
+			alert ("YOU LOSE!")
+			this.resetBoard()
+		}
 	}
 
 	draw () {
