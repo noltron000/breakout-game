@@ -1,9 +1,14 @@
-import RectangleMOB from './rectangle-mob.js'
+import MobileObject from './mobile-object.js'
 
-class Brick extends RectangleMOB {
-	constructor (canvasContext, {coordinates, dimensions}) {
-		super(canvasContext, {coordinates, dimensions, color: 'black'})
+class Brick extends MobileObject {
+	constructor (game, transform) {
+		super(game, transform, {color: 'black'})
 		this.health = 1
+	}
+
+	damageBrickEffect () {
+		this.health -= 1
+		this.game.destroyAsset(this)
 	}
 }
 
