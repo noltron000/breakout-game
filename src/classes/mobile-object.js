@@ -341,7 +341,8 @@ class MobileObject {
 
 		// Y Coordinates can't exceed the board's height.
 		const boardHeight = this.game.board.height
-		if (this.transform.yPos >= boardHeight) this.transform.yPos = boardHeight
+		if (this.transform.yPos >= boardHeight - this.transform.height)
+			this.transform.yPos = boardHeight - this.transform.height
 	}
 
 	forceDownEffect () {
@@ -356,7 +357,8 @@ class MobileObject {
 		const boardWidth = this.game.board.width
 
 		// X Coordinates can't exceed the board's width.
-		if (this.transform.xPos >= boardWidth) this.transform.xPos = boardWidth
+		if (this.transform.xPos >= boardWidth - this.transform.width)
+			this.transform.xPos = boardWidth - this.transform.width
 	}
 
 	forceRightEffect () {
