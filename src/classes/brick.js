@@ -1,8 +1,8 @@
 import MobileObject from './mobile-object.js'
 
 class Brick extends MobileObject {
-	constructor (game, {coordinates, dimensions}) {
-		super(game, {coordinates, dimensions, color: 'black'})
+	constructor (game, {transform}) {
+		super(game, {transform, color: 'black'})
 		this.health = 1
 	}
 }

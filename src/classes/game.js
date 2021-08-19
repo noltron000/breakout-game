@@ -43,8 +43,17 @@ class Game {
 	// Creates one ball.
 	createBall () {
 		return new Ball(this, {
-			coordinates: [[40, 350], [0, -1]],
-			dimensions: [10, 10],
+			positions: [{
+				x: 40,
+				y: 350,
+			}, {
+				x: 0,
+				y: -1,
+			}],
+			dimensions: [{
+				x: 10,
+				y: 10,
+			}],
 		})
 	}
 
@@ -56,8 +65,14 @@ class Game {
 	// Creates one paddle.
 	createPaddle () {
 		return new Paddle(this, {
-			coordinates: [[20, this.board.height - 40]],
-			dimensions: [100, 20],
+			positions: [{
+				x: 20,
+				y: this.board.height - 40,
+			}],
+			dimensions: [{
+				x: 100,
+				y: 20,
+			}],
 		})
 	}
 
@@ -92,8 +107,14 @@ class Game {
 
 					// Create the new brick based on calculated values.
 					return new Brick(this, {
-						coordinates: [[xPos, yPos]],
-						dimensions: [brickLength, brickHeight],
+						positions: [{
+							x: xPos,
+							y: yPos,
+						}],
+						dimensions: [{
+							x: brickLength,
+							y: brickHeight
+						}],
 					})
 				}
 			)
