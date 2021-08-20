@@ -1,10 +1,19 @@
-// JavaScript code goes here
-let canvas = document.getElementById("myCanvas");
-let ctx = canvas.getContext("2d"); // CANVAS CONTEXT
+import Game from './classes/game.js'
 
-// Canvas Variables™€
-let MarginTop = 80;
-let MarginSide = 80;
+// Obtain the canvas
+const canvasElement = document.getElementById("myCanvas");
+
+// Create a new game context.
+const game = new Game(canvasElement)
+
+/***
+
+// Brick Variables
+const brickRowCount = 16;
+const brickColCount = 12;
+const brickPadding = 3;
+const brickHeight = (canvas.height / 3 - MarginTop) / (brickRowCount);
+const brickWidth = (canvas.width - MarginSide * 2 - (brickPadding * (brickRowCount - 1) / brickColCount)) / brickColCount;
 
 let bricks = [];
 for (let c = 0; c < brickColCount; c++) {
@@ -19,34 +28,10 @@ let score = 0;
 let lives = 9;
 let game_on = true;
 
-const mouseMoveHandler = (e) => {
-	let relativeX = e.clientX - canvas.offsetLeft;
-	if (relativeX > 0 && relativeX < canvas.width) {
-		paddleX = relativeX - paddleWidth / 2;
-	}
-}
+// Defining COLOR Variables
+let brickColor = "";
+let paddleColor = "";
 
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-document.addEventListener("mousemove", mouseMoveHandler, false);
-
-
-const getRandomColor = () => {
-	ctx.fillStyle = 'gray'
-	let letters = '0123456789ABCDEF';
-	let color = '#';
-	for (let i = 0; i < 6; i++) {
-		color += letters[Math.floor(Math.random() * 16)];
-	}
-	return color;
-}
-
-const rainbowMode = (color) => {
-	if (color > 360) {
-		color = color - 360
-	}
-	return `hsl(${color}, 100%, 50%)`
-}
 
 const collisionDetection = () => {
 	for (let c = 0; c < brickColCount; c++) {
@@ -83,42 +68,6 @@ const collisionDetection = () => {
 	}
 }
 
-const drawPaddle = () => {
-	// Fill with gradient
-	ctx.fillStyle = 'grey';
-	ctx.beginPath();
-	ctx.rect(paddleX, canvas.height - paddleHeight - paddleRaise, paddleWidth, paddleHeight);
-	ctx.fill();
-	ctx.closePath();
-}
-
-const drawBricks = () => {
-	ctx.fillStyle = 'gray'
-	for (let c = 0; c < brickColCount; c++) {
-		for (let r = 0; r < brickRowCount; r++) {
-			if (bricks[c][r].status == true) {
-				let brickX = (c * (brickWidth + brickPadding * 2));
-				let brickY = (r * (brickHeight + brickPadding * 2));
-				bricks[c][r].x = brickX;
-				bricks[c][r].y = brickY;
-				if ((r % 2) == 0) {
-					brickX = (c * (brickWidth + brickPadding)) + MarginSide + brickWidth / 4;
-					brickY = (r * (brickHeight + brickPadding)) + MarginTop;
-				} else {
-					brickX = (c * (brickWidth + brickPadding)) + MarginSide - brickWidth / 4;
-					brickY = (r * (brickHeight + brickPadding)) + MarginTop;
-				}
-				bricks[c][r].x = brickX;
-				bricks[c][r].y = brickY;
-				ctx.beginPath();
-				ctx.rect(brickX, brickY, brickWidth, brickHeight);
-				ctx.fill();
-				ctx.closePath();
-			}
-		}
-	}
-}
-
 const drawScore = () => {
 	ctx.fillStyle = 'gray'
 	ctx.font = "16px Arial";
@@ -132,10 +81,6 @@ const drawLives = () => {
 }
 
 const draw = () => {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	drawBall();
-	drawPaddle();
-	drawBricks();
 	drawScore();
 	drawLives();
 	collisionDetection();
@@ -178,7 +123,8 @@ const draw = () => {
 	x += dx;
 	y += dy;
 	ballRadius /= 1 + 1 / 128;
-	requestAnimationFrame(draw);
 }
+***/
 
-draw();
+// Start infinitely drawing the canvas every frame.
+game.draw()
